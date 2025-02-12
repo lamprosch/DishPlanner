@@ -1,5 +1,7 @@
 import sqlite3
 from sqlite3 import Error
+import tkinter as tk
+from tkinter import simpledialog, messagebox
 
 ############################################################################################################
 ############################################## CONNECTION ##################################################
@@ -73,32 +75,54 @@ def insert_dish_ingredient(connection, dish_id, ingredient_id, quantity_per_pers
 ############################################################################################################
 
 def input_dish_data(connection):
-    # Prompt user for dish details
-    dish_name = input("Enter the name of the dish: ")
-    description = input("Enter the description of the dish: ")
+    # Create a new window
+    input_window = tk.Toplevel()
+    input_window.title("Add Dish")
 
-    # Insert a new dish
-    insert_dish(connection, dish_name, description)
+    # Dish name
+    tk.Label(input_window, text="Dish Name:").grid(row=0, column=0)
+    dish_name_entry = tk.Entry(input_window)
+    dish_name_entry.grid(row=0, column=1)
 
-    # Get the dish ID of the newly inserted dish (?)
-    dish_id_query = f"""
-    SELECT DishID FROM Dishes WHERE DishName = '{dish_name}';
-    """
-    dish_id = execute_read_query(connection, dish_id_query)[0][0] # [0][0] to get the first element of the first tuple
+    # Description
+    tk.Label(input_window, text="Description:").grid(row=1, column=0)
+    description_entry = tk.Entry(input_window)
+    description_entry.grid(row=1, column=1)
 
-    # Prompt user for ingredients
-    ingredients = input("Enter the ingredients of the dish (separated by commas): ").split(", ")
+    # Ingredients
+    tk.Label(input_window, text="Ingredients (comma-seperated):").grid(row=2, column=0)
+    ingredients_entry = tk.Entry(input_window)
+    ingredients_entry.grid(row=2, column=1)
 
-    # Insert ingredients and dish ingredients
-    for ingredient in ingredients:
-        ingredient = ingredient.strip() # Remove leading/trailing whitespaces
-        insert_ingredient(connection, ingredient)
-        ingredient_id_query = f"""
-        SELECT IngredientID FROM Ingredients WHERE IngredientName = '{ingredient}';
-        """
-        ingredient_id = execute_read_query(connection, ingredient_id_query)[0][0]
-        quantity_per_person = float(input(f"Enter the quantity of {ingredient} per person: "))
-        insert_dish_ingredient(connection, dish_id, ingredient_id, quantity_per_person)
+    def submit_data():
+        dish_name = dish_name_entry.get()
+        description = description_entry.get()
+        ingredients = ingredients_entry.get().split(",")
+
+        # Insert the dish and its ingredients
+        insert_dish(connection, dish_name, description)
+
+        # Get the dish ID of the newly inserted dish
+        dish_id_query = f"SELECT DishID FROM Dishes WHERE DishName = '{dish_name}'"
+        dish_id = execute_read_query(connection, dish_id_query)[0][0]
+
+        # Insert ingredients and dish ingredients
+        for ingredient in ingredients:
+            ingredient = ingredient.strip()
+            insert_ingredient(connection, ingredient)
+            ingredient_id_query = f"""
+            SELECT IngredientID FROM Ingredients WHERE IngredientName = '{ingredient}';
+            """
+            ingredient_id = execute_read_query(connection, ingredient_id_query)[0][0]
+            quantity_per_person = simpledialog.askfloat("Input", f"Enter the quantity per person for {ingredient}:")
+            insert_dish_ingredient(connection, dish_id, ingredient_id, quantity_per_person)
+
+        messagebox.showinfo("Success", "Dish added successfully!")
+        input_window.destroy()
+
+    # Submit button
+    submit_button = tk.Button(input_window, text="Submit", command=submit_data)
+    submit_button.grid(row=3, column=0,columnspan=2)
 
 
 ############################################################################################################
@@ -108,8 +132,17 @@ def input_dish_data(connection):
 # Connect to the database
 connection = create_connection(database)
 
-# Input data
-input_dish_data(connection)
+# Create the main window
+root = tk.Tk()
+root.title("Dish Planner")
+root.geometry("400x300") # Set the window size
+
+# Add Dish button
+add_dish_button = tk.Button(root, text="Add Dish", command=lambda: input_dish_data(connection)) # Lambda (?)
+add_dish_button.pack(pady=20)
+
+# Run the application
+root.mainloop()
 
 # Close the connection
 if connection:
