@@ -74,10 +74,31 @@ def insert_dish_ingredient(connection, dish_id, ingredient_id, quantity_per_pers
 ############################################## INPUT #######################################################
 ############################################################################################################
 
+def style_widgets(widget):
+    widget.configure(bg="#f0f0f0", fg="#333333", font=("Helvetica", 12))
+    if isinstance(widget, tk.Button):
+        widget.configure(bg="#FFDD57", fg="#333333", activebackground="#FFCC33", relief="flat", bd=0, highlightthickness=0)
+        widget.bind("<Enter>", lambda e: widget.configure(bg="#FFCC33"))
+        widget.bind("<Leave>", lambda e: widget.configure(bg="#FFDD57"))
+        widget.configure(borderwidth=0, highlightthickness=0)
+        widget.configure(padx=10, pady=5)
+        widget.configure(font=("Helvetica", 12, "bold"))
+        widget.configure(cursor="hand2")
+    elif isinstance(widget, tk.Label):
+        widget.configure(bg="#f0f0f0", fg="#333333", font=("Helvetica", 12))
+    elif isinstance(widget, tk.Entry):
+        widget.configure(bg="white", fg="#333333", font=("Helvetica", 12), relief="flat", bd=1)
+
+def style_window(window):
+    window.configure(bg="#f0f0f0")
+    for widget in window.winfo_children():
+        style_widgets(widget)
+
 def input_dish_data(connection):
     # Create a new window
     input_window = tk.Toplevel()
     input_window.title("Add Dish")
+    style_window(input_window)
 
     # Dish name
     tk.Label(input_window, text="Dish Name:").grid(row=0, column=0)
@@ -123,11 +144,13 @@ def input_dish_data(connection):
     # Submit button
     submit_button = tk.Button(input_window, text="Submit", command=submit_data)
     submit_button.grid(row=3, column=0,columnspan=2)
+    style_widgets(submit_button)
 
 def view_dishes(connection):
     # Create a new window
     show_window = tk.Toplevel()
     show_window.title("View Dishes")
+    style_window(show_window)
 
     # Get the dishes
     query = "SELECT DishID, DishName FROM Dishes"
@@ -146,6 +169,7 @@ def view_ingredients(connection):
     # Create a new window
     show_window = tk.Toplevel()
     show_window.title("View Ingredients")
+    style_window(show_window)
 
     # Get the ingredients
     query = "SELECT IngredientID, IngredientName FROM Ingredients"
@@ -172,18 +196,22 @@ connection = create_connection(database)
 root = tk.Tk()
 root.title("Dish Planner")
 root.geometry("400x300") # Set the window size
+style_window(root)
 
 # Add Dish button
 add_dish_button = tk.Button(root, text="Add Dish", command=lambda: input_dish_data(connection)) # Lambda (?)
 add_dish_button.pack(pady=20)
+style_widgets(add_dish_button)
 
 # Add View Dishes button
 view_dishes_button = tk.Button(root, text="View Dishes", command=lambda: view_dishes(connection))
 view_dishes_button.pack(pady=20)
+style_widgets(view_dishes_button)
 
 # Add View Ingredients button
 view_ingredients_button = tk.Button(root, text="View Ingredients", command=lambda: view_ingredients(connection))
 view_ingredients_button.pack(pady=20)
+style_widgets(view_ingredients_button)
 
 # Run the application
 root.mainloop()
