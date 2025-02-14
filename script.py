@@ -124,6 +124,17 @@ def input_dish_data(connection):
     submit_button = tk.Button(input_window, text="Submit", command=submit_data)
     submit_button.grid(row=3, column=0,columnspan=2)
 
+def view_dishes(connection):
+    # Create a new window
+    show_window = tk.Toplevel()
+    show_window.title("View Dishes")
+
+    # Get the dishes
+    query = "SELECT DishID, DishName FROM Dishes"
+    dishes = execute_read_query(connection, query)
+    for dish in dishes:
+        dish_id, dish_name = dish
+        tk.Label(show_window, text=f"{dish_id}. {dish_name}").pack()
 
 ############################################################################################################
 ############################################## MAIN ########################################################
@@ -140,6 +151,10 @@ root.geometry("400x300") # Set the window size
 # Add Dish button
 add_dish_button = tk.Button(root, text="Add Dish", command=lambda: input_dish_data(connection)) # Lambda (?)
 add_dish_button.pack(pady=20)
+
+# Add View Dishes button
+view_dishes_button = tk.Button(root, text="View Dishes", command=lambda: view_dishes(connection))
+view_dishes_button.pack(pady=20)
 
 # Run the application
 root.mainloop()
