@@ -132,10 +132,35 @@ def view_dishes(connection):
     # Get the dishes
     query = "SELECT DishID, DishName FROM Dishes"
     dishes = execute_read_query(connection, query)
+    
+    # Create a frame to hold the labels
+    frame = tk.Frame(show_window)
+    frame.pack(padx=10, pady=10)
+
     for dish in dishes:
         dish_id, dish_name = dish
-        tk.Label(show_window, text=f"{dish_id}. {dish_name}").pack()
+        tk.Label(frame, text=f"{dish_id}", width=10, anchor='w').grid(row=dish_id, column=0, sticky='w')
+        tk.Label(frame, text=f"{dish_name}", width=30, anchor='w').grid(row=dish_id, column=1, sticky='w')
 
+def view_ingredients(connection):
+    # Create a new window
+    show_window = tk.Toplevel()
+    show_window.title("View Ingredients")
+
+    # Get the ingredients
+    query = "SELECT IngredientID, IngredientName FROM Ingredients"
+    ingredients = execute_read_query(connection, query)
+
+    #Create a frame to hold the labels
+    frame = tk.Frame(show_window)
+    frame.pack(padx=10, pady=10)
+
+
+    for ingredient in ingredients:
+        ingredient_id, ingredient_name = ingredient
+        tk.Label(frame, text=f"{ingredient_id}", width=10, anchor='w').grid(row=ingredient_id, column=0, sticky='w')
+        tk.Label(frame, text=f"{ingredient_name}", width=30, anchor='w').grid(row=ingredient_id, column=1, sticky='w')
+        
 ############################################################################################################
 ############################################## MAIN ########################################################
 ############################################################################################################
@@ -155,6 +180,10 @@ add_dish_button.pack(pady=20)
 # Add View Dishes button
 view_dishes_button = tk.Button(root, text="View Dishes", command=lambda: view_dishes(connection))
 view_dishes_button.pack(pady=20)
+
+# Add View Ingredients button
+view_ingredients_button = tk.Button(root, text="View Ingredients", command=lambda: view_ingredients(connection))
+view_ingredients_button.pack(pady=20)
 
 # Run the application
 root.mainloop()
