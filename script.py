@@ -1,7 +1,8 @@
 import sqlite3
 from sqlite3 import Error
 import tkinter as tk
-from tkinter import simpledialog, messagebox
+from tkinter import simpledialog, messagebox, ttk
+import sv_ttk
 
 ############################################################################################################
 ############################################## CONNECTION ##################################################
@@ -238,27 +239,28 @@ connection = create_connection(database)
 root = tk.Tk()
 root.title("Dish Planner")
 root.geometry("400x300") # Set the window size
-style_window(root)
+# style_window(root)
+sv_ttk.set_theme("light")
 
 # Add Dish button
-add_dish_button = tk.Button(root, text="Add Dish", command=lambda: input_dish_data(connection)) # Lambda (?)
+add_dish_button = ttk.Button(root, text="Add Dish", command=lambda: input_dish_data(connection)) # Lambda (?)
 add_dish_button.pack(pady=20)
-style_widgets(add_dish_button)
+# style_widgets(add_dish_button)
 
 # Add Plan Menu button
-plan_menu_button = tk.Button(root, text="Plan Menu", command=lambda: plan_menu(connection))
+plan_menu_button = ttk.Button(root, text="Plan Menu", command=lambda: plan_menu(connection))
 plan_menu_button.pack(pady=20)
-style_widgets(plan_menu_button)
+# style_widgets(plan_menu_button)
 
 # Add View Ingredients button
-view_ingredients_button = tk.Button(root, text="View Ingredients", command=lambda: view_ingredients(connection))
+view_ingredients_button = ttk.Button(root, text="View Ingredients", command=lambda: view_ingredients(connection))
 view_ingredients_button.pack(pady=20)
-style_widgets(view_ingredients_button)
+# style_widgets(view_ingredients_button)
 
 # Add Extract Shopping List button
-extract_shopping_list_button = tk.Button(root, text="Extract Shopping List", command=lambda: extract_shopping_list(connection))
+extract_shopping_list_button = ttk.Button(root, text="Extract Shopping List", command=lambda: extract_shopping_list(connection))
 extract_shopping_list_button.pack(pady=20)
-style_widgets(extract_shopping_list_button)
+# style_widgets(extract_shopping_list_button)
 
 # Run the application
 root.mainloop()
