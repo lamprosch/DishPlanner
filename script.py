@@ -146,24 +146,40 @@ def input_dish_data(connection):
     submit_button.grid(row=3, column=0,columnspan=2)
     style_widgets(submit_button)
 
-def view_dishes(connection):
+selected_dishes = []
+
+def plan_menu(connection):
     # Create a new window
     show_window = tk.Toplevel()
-    show_window.title("View Dishes")
+    show_window.title("Plan Menu")
     style_window(show_window)
 
     # Get the dishes
     query = "SELECT DishID, DishName FROM Dishes"
     dishes = execute_read_query(connection, query)
     
-    # Create a frame to hold the labels
+    # Create a frame to hold the checkboxes
     frame = tk.Frame(show_window)
     frame.pack(padx=10, pady=10)
 
+    checkboxes = {}
     for dish in dishes:
         dish_id, dish_name = dish
-        tk.Label(frame, text=f"{dish_id}", width=10, anchor='w').grid(row=dish_id, column=0, sticky='w')
-        tk.Label(frame, text=f"{dish_name}", width=30, anchor='w').grid(row=dish_id, column=1, sticky='w')
+        var = tk.IntVar()
+        checkbox = tk.Checkbutton(frame, text=f"{dish_id}. {dish_name}", variable=var, bg="#f0f0f0", fg="#333333", font=("Helvetica", 12))
+        checkbox.grid(sticky='w')
+        checkboxes[dish_id] = var
+
+    def submit_selection():
+        global selected_dishes
+        selected_dishes = [dish_id for dish_id, var in checkboxes.items() if var.get() == 1]
+        messagebox.showinfo("Selection", f"Selected Dishes: {selected_dishes}")
+        show_window.destroy()
+
+    # Submit button
+    submit_button = tk.Button(show_window, text="Submit", command=submit_selection)
+    submit_button.pack(pady=10)
+    style_widgets(submit_button)
 
 def view_ingredients(connection):
     # Create a new window
@@ -184,6 +200,32 @@ def view_ingredients(connection):
         ingredient_id, ingredient_name = ingredient
         tk.Label(frame, text=f"{ingredient_id}", width=10, anchor='w').grid(row=ingredient_id, column=0, sticky='w')
         tk.Label(frame, text=f"{ingredient_name}", width=30, anchor='w').grid(row=ingredient_id, column=1, sticky='w')
+
+# Fuction to extract the shopping list
+def extract_shopping_list(connection):
+    # Create a new window
+    show_window = tk.Toplevel()
+    show_window.title("Shopping List")
+    style_window(show_window)
+
+    # Get the ingredients for the selected dishes
+    ingredients = []
+    for dish_id in selected_dishes:
+        query = f"""
+        SELECT Ingredients.IngredientName, DishIngredients.QuantityPerPerson
+        FROM DishIngredients
+        JOIN Ingredients ON Ingredients.IngredientID = DishIngredients.IngredientID
+        WHERE DishIngredients.DishID = {dish_id};
+        """
+        ingredients += execute_read_query(connection, query)
+    
+    # Create a frame to hold the labels
+    frame = tk.Frame(show_window)
+    frame.pack(padx=10, pady=10)
+
+    for index, ingredient in enumerate(ingredients):
+        ingredient_name, quantity = ingredient
+        tk.Label(frame, text=f"{index+1}. {ingredient_name} - {quantity}").grid(row=index, column=0, sticky='w')
         
 ############################################################################################################
 ############################################## MAIN ########################################################
@@ -203,15 +245,20 @@ add_dish_button = tk.Button(root, text="Add Dish", command=lambda: input_dish_da
 add_dish_button.pack(pady=20)
 style_widgets(add_dish_button)
 
-# Add View Dishes button
-view_dishes_button = tk.Button(root, text="View Dishes", command=lambda: view_dishes(connection))
-view_dishes_button.pack(pady=20)
-style_widgets(view_dishes_button)
+# Add Plan Menu button
+plan_menu_button = tk.Button(root, text="Plan Menu", command=lambda: plan_menu(connection))
+plan_menu_button.pack(pady=20)
+style_widgets(plan_menu_button)
 
 # Add View Ingredients button
 view_ingredients_button = tk.Button(root, text="View Ingredients", command=lambda: view_ingredients(connection))
 view_ingredients_button.pack(pady=20)
 style_widgets(view_ingredients_button)
+
+# Add Extract Shopping List button
+extract_shopping_list_button = tk.Button(root, text="Extract Shopping List", command=lambda: extract_shopping_list(connection))
+extract_shopping_list_button.pack(pady=20)
+style_widgets(extract_shopping_list_button)
 
 # Run the application
 root.mainloop()
