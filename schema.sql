@@ -27,7 +27,7 @@ CREATE TABLE DishIngredients (
     DishIngredientID INTEGER PRIMARY KEY,
     DishID INTEGER,
     IngredientID INTEGER,
-    QuantityPerPerson REAL,
+    QuantityPerPerson TEXT,
     FOREIGN KEY (DishID) REFERENCES Dishes(DishID),
     FOREIGN KEY (IngredientID) REFERENCES Ingredients(IngredientID)
 );
