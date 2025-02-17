@@ -1,7 +1,8 @@
 import sqlite3
 from sqlite3 import Error
 import tkinter as tk
-from tkinter import simpledialog, messagebox
+from tkinter import simpledialog, messagebox, ttk
+import sv_ttk
 
 ############################################################################################################
 ############################################## CONNECTION ##################################################
@@ -74,46 +75,31 @@ def insert_dish_ingredient(connection, dish_id, ingredient_id, quantity_per_pers
 ############################################## INPUT #######################################################
 ############################################################################################################
 
-def style_widgets(widget):
-    widget.configure(bg="#f0f0f0", fg="#333333", font=("Helvetica", 12))
-    if isinstance(widget, tk.Button):
-        widget.configure(bg="#FFDD57", fg="#333333", activebackground="#FFCC33", relief="flat", bd=0, highlightthickness=0)
-        widget.bind("<Enter>", lambda e: widget.configure(bg="#FFCC33"))
-        widget.bind("<Leave>", lambda e: widget.configure(bg="#FFDD57"))
-        widget.configure(borderwidth=0, highlightthickness=0)
-        widget.configure(padx=10, pady=5)
-        widget.configure(font=("Helvetica", 12, "bold"))
-        widget.configure(cursor="hand2")
-    elif isinstance(widget, tk.Label):
-        widget.configure(bg="#f0f0f0", fg="#333333", font=("Helvetica", 12))
-    elif isinstance(widget, tk.Entry):
-        widget.configure(bg="white", fg="#333333", font=("Helvetica", 12), relief="flat", bd=1)
-
-def style_window(window):
-    window.configure(bg="#f0f0f0")
-    for widget in window.winfo_children():
-        style_widgets(widget)
-
 def input_dish_data(connection):
     # Create a new window
     input_window = tk.Toplevel()
     input_window.title("Add Dish")
-    style_window(input_window)
+    input_window.geometry("375x667")
+    sv_ttk.set_theme("light")
+
+    # Create a frame to center the elements
+    center_frame = ttk.Frame(input_window)
+    center_frame.place(relx=0.5, rely=0.5, anchor="center")
 
     # Dish name
-    tk.Label(input_window, text="Dish Name:").grid(row=0, column=0)
-    dish_name_entry = tk.Entry(input_window)
-    dish_name_entry.grid(row=0, column=1)
+    ttk.Label(center_frame, text="Dish Name:").grid(row=0, column=0, pady=5)
+    dish_name_entry = ttk.Entry(center_frame)
+    dish_name_entry.grid(row=0, column=1, pady=5)
 
     # Description
-    tk.Label(input_window, text="Description:").grid(row=1, column=0)
-    description_entry = tk.Entry(input_window)
-    description_entry.grid(row=1, column=1)
+    ttk.Label(center_frame, text="Description:").grid(row=1, column=0, pady=5)
+    description_entry = ttk.Entry(center_frame)
+    description_entry.grid(row=1, column=1, pady=5)
 
     # Ingredients
-    tk.Label(input_window, text="Ingredients (comma-seperated):").grid(row=2, column=0)
-    ingredients_entry = tk.Entry(input_window)
-    ingredients_entry.grid(row=2, column=1)
+    ttk.Label(center_frame, text="Ingredients (comma-seperated):").grid(row=2, column=0, pady=5)
+    ingredients_entry = ttk.Entry(center_frame)
+    ingredients_entry.grid(row=2, column=1, pady=5)
 
     def submit_data():
         dish_name = dish_name_entry.get()
@@ -142,9 +128,8 @@ def input_dish_data(connection):
         input_window.destroy()
 
     # Submit button
-    submit_button = tk.Button(input_window, text="Submit", command=submit_data)
-    submit_button.grid(row=3, column=0,columnspan=2)
-    style_widgets(submit_button)
+    submit_button = ttk.Button(center_frame, text="Submit", command=submit_data)
+    submit_button.grid(row=3, column=0, columnspan=2, pady=10)
 
 selected_dishes = []
 
@@ -152,61 +137,72 @@ def plan_menu(connection):
     # Create a new window
     show_window = tk.Toplevel()
     show_window.title("Plan Menu")
-    style_window(show_window)
+    show_window.geometry("375x667")
+    sv_ttk.set_theme("light")
+
+    # Create a frame to center the elements
+    center_frame = ttk.Frame(show_window)
+    center_frame.place(relx=0.5, rely=0.5, anchor="center")
 
     # Get the dishes
     query = "SELECT DishID, DishName FROM Dishes"
     dishes = execute_read_query(connection, query)
-    
-    # Create a frame to hold the checkboxes
-    frame = tk.Frame(show_window)
-    frame.pack(padx=10, pady=10)
 
     checkboxes = {}
     for dish in dishes:
         dish_id, dish_name = dish
         var = tk.IntVar()
-        checkbox = tk.Checkbutton(frame, text=f"{dish_id}. {dish_name}", variable=var, bg="#f0f0f0", fg="#333333", font=("Helvetica", 12))
-        checkbox.grid(sticky='w')
+        checkbox = ttk.Checkbutton(center_frame, text=f"{dish_id}. {dish_name}", variable=var)
+        checkbox.pack(anchor="w", pady=5)
         checkboxes[dish_id] = var
 
     def submit_selection():
         global selected_dishes
         selected_dishes = [dish_id for dish_id, var in checkboxes.items() if var.get() == 1]
+        sv_ttk.set_theme("light")
         messagebox.showinfo("Selection", f"Selected Dishes: {selected_dishes}")
         show_window.destroy()
 
     # Submit button
-    submit_button = tk.Button(show_window, text="Submit", command=submit_selection)
+    submit_button = ttk.Button(center_frame, text="Submit", command=submit_selection)
     submit_button.pack(pady=10)
-    style_widgets(submit_button)
 
 def view_ingredients(connection):
     # Create a new window
     show_window = tk.Toplevel()
     show_window.title("View Ingredients")
-    style_window(show_window)
+    show_window.geometry("375x667")
+    sv_ttk.set_theme("light")
+
+    # Create a frame to center the elements
+    center_frame = ttk.Frame(show_window)
+    center_frame.place(relx=0.5, rely=0.5, anchor="center")
 
     # Get the ingredients
     query = "SELECT IngredientID, IngredientName FROM Ingredients"
     ingredients = execute_read_query(connection, query)
 
-    #Create a frame to hold the labels
-    frame = tk.Frame(show_window)
-    frame.pack(padx=10, pady=10)
+    # Eliminate duplicates and ensure case-sansitive
+    unique_ingredients = {}
+    for ingredient_id, ingredient_name in ingredients:
+        if ingredient_name not in unique_ingredients:
+            unique_ingredients[ingredient_name] = ingredient_id
 
+    for ingredient_name, ingredient_id in unique_ingredients.items():
+        ttk.Label(center_frame, text=f"{ingredient_id}", width=10, anchor='w').pack(anchor="w", pady=5)
+        ttk.Label(center_frame, text=f"{ingredient_name.capitalize()}", width=30, anchor='w').pack(anchor="w", pady=5)
 
-    for ingredient in ingredients:
-        ingredient_id, ingredient_name = ingredient
-        tk.Label(frame, text=f"{ingredient_id}", width=10, anchor='w').grid(row=ingredient_id, column=0, sticky='w')
-        tk.Label(frame, text=f"{ingredient_name}", width=30, anchor='w').grid(row=ingredient_id, column=1, sticky='w')
-
-# Fuction to extract the shopping list
+# Function to extract the shopping list
 def extract_shopping_list(connection):
     # Create a new window
     show_window = tk.Toplevel()
     show_window.title("Shopping List")
-    style_window(show_window)
+    show_window.geometry("375x667")
+    sv_ttk.set_theme("light")
+
+    # Create a frame to center the elements
+    center_frame = ttk.Frame(show_window)
+    center_frame.place(relx=0.5, rely=0.5, anchor="center")
 
     # Get the ingredients for the selected dishes
     ingredients = []
@@ -218,15 +214,11 @@ def extract_shopping_list(connection):
         WHERE DishIngredients.DishID = {dish_id};
         """
         ingredients += execute_read_query(connection, query)
-    
-    # Create a frame to hold the labels
-    frame = tk.Frame(show_window)
-    frame.pack(padx=10, pady=10)
 
     for index, ingredient in enumerate(ingredients):
         ingredient_name, quantity = ingredient
-        tk.Label(frame, text=f"{index+1}. {ingredient_name} - {quantity}").grid(row=index, column=0, sticky='w')
-        
+        ttk.Label(center_frame, text=f"{index+1}. {ingredient_name} - {quantity}").pack(anchor="w", pady=5)
+
 ############################################################################################################
 ############################################## MAIN ########################################################
 ############################################################################################################
@@ -237,28 +229,51 @@ connection = create_connection(database)
 # Create the main window
 root = tk.Tk()
 root.title("Dish Planner")
-root.geometry("400x300") # Set the window size
-style_window(root)
+root.geometry("375x667") # Set the window size
+sv_ttk.set_theme("light")
+
+# Create a frame to center the elements
+center_frame = ttk.Frame(root)
+center_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+# Create a sidebar
+sidebar = ttk.Frame(root, width=200, height=667)
+sidebar.grid(row=0, column=0, sticky="ns")
+sidebar.grid_propagate(False)
+sidebar.grid_remove()
+
+# Add buttons to the sidebar
+ttk.Button(sidebar, text="Button 1").pack(fill="x", pady=10)
+ttk.Button(sidebar, text="Button 2").pack(fill="x", pady=10)
+ttk.Button(sidebar, text="Button 3").pack(fill="x", pady=10)
+ttk.Button(sidebar, text="Button 4").pack(fill="x", pady=10)
+
+def toggle_sidebar():
+    if sidebar.winfo_ismapped():
+        sidebar.grid_remove()
+    else:
+        sidebar.grid()
+
+# Add burger icon
+burger_icon = tk.PhotoImage(file="icons/navigation.png")  # Ensure you have a burger_icon.png file in the same directory
+burger_button = ttk.Button(root, image=burger_icon, command=toggle_sidebar)
+burger_button.place(x=10, y=10)
 
 # Add Dish button
-add_dish_button = tk.Button(root, text="Add Dish", command=lambda: input_dish_data(connection)) # Lambda (?)
-add_dish_button.pack(pady=20)
-style_widgets(add_dish_button)
+add_dish_button = ttk.Button(center_frame, text="Add Dish", command=lambda: input_dish_data(connection)) # Lambda (?)
+add_dish_button.pack(fill="x", pady=10)
 
 # Add Plan Menu button
-plan_menu_button = tk.Button(root, text="Plan Menu", command=lambda: plan_menu(connection))
-plan_menu_button.pack(pady=20)
-style_widgets(plan_menu_button)
+plan_menu_button = ttk.Button(center_frame, text="Plan Menu", command=lambda: plan_menu(connection))
+plan_menu_button.pack(fill="x", pady=10)
 
 # Add View Ingredients button
-view_ingredients_button = tk.Button(root, text="View Ingredients", command=lambda: view_ingredients(connection))
-view_ingredients_button.pack(pady=20)
-style_widgets(view_ingredients_button)
+view_ingredients_button = ttk.Button(center_frame, text="View Ingredients", command=lambda: view_ingredients(connection))
+view_ingredients_button.pack(fill="x", pady=10)
 
 # Add Extract Shopping List button
-extract_shopping_list_button = tk.Button(root, text="Extract Shopping List", command=lambda: extract_shopping_list(connection))
-extract_shopping_list_button.pack(pady=20)
-style_widgets(extract_shopping_list_button)
+extract_shopping_list_button = ttk.Button(center_frame, text="Extract Shopping List", command=lambda: extract_shopping_list(connection))
+extract_shopping_list_button.pack(fill="x", pady=10)
 
 # Run the application
 root.mainloop()
