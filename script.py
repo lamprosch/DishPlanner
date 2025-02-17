@@ -153,21 +153,21 @@ def plan_menu(connection):
     # Create a new window
     show_window = tk.Toplevel()
     show_window.title("Plan Menu")
-    style_window(show_window)
+    # style_window(show_window)
 
     # Get the dishes
     query = "SELECT DishID, DishName FROM Dishes"
     dishes = execute_read_query(connection, query)
     
     # Create a frame to hold the checkboxes
-    frame = tk.Frame(show_window)
+    frame = ttk.Frame(show_window)
     frame.pack(padx=10, pady=10)
 
     checkboxes = {}
     for dish in dishes:
         dish_id, dish_name = dish
         var = tk.IntVar()
-        checkbox = tk.Checkbutton(frame, text=f"{dish_id}. {dish_name}", variable=var, bg="#f0f0f0", fg="#333333", font=("Helvetica", 12))
+        checkbox = ttk.Checkbutton(frame, text=f"{dish_id}. {dish_name}", variable=var)
         checkbox.grid(sticky='w')
         checkboxes[dish_id] = var
 
@@ -178,9 +178,9 @@ def plan_menu(connection):
         show_window.destroy()
 
     # Submit button
-    submit_button = tk.Button(show_window, text="Submit", command=submit_selection)
+    submit_button = ttk.Button(show_window, text="Submit", command=submit_selection)
     submit_button.pack(pady=10)
-    style_widgets(submit_button)
+    # style_widgets(submit_button)
 
 def view_ingredients(connection):
     # Create a new window
