@@ -79,12 +79,18 @@ def input_dish_data(connection):
     # Create a new window
     input_window = tk.Toplevel()
     input_window.title("Add New Dish")
-    input_window.geometry("375x667")
+    input_window.geometry("500x667")
     sv_ttk.set_theme("light")
+
+    # Add button on the top left corner
+    return_icon = tk.PhotoImage(file="/home/lampros/Coding Projects/DishPlanner/icons/return.png")
+    return_button = ttk.Button(input_window, image=return_icon, command=input_window.destroy)
+    return_button.image = return_icon  # Keep a reference to the image to prevent garbage collection
+    return_button.place(x=10, y=10) 
 
     # Create a frame to center the elements
     center_frame = ttk.Frame(input_window, padding=15, style="Card.TFrame")
-    center_frame.place(relx=0.5, rely=0.5, anchor="center")
+    center_frame.place(relx=0.5, rely=0.5, anchor="center", y=50)
 
     # Dish name
     dish_name_entry = ttk.Entry(center_frame)
@@ -104,33 +110,50 @@ def input_dish_data(connection):
         for widget in center_frame.winfo_children():
             widget.grid_remove()
 
-        # Frame for dish name and description
+        # Create top and bottom frames
         top_frame = ttk.Frame(input_window, padding=15)
-        top_frame.place(x=10, y=10, anchor="nw")
-        # Show dish name and description at the top left corner
-        ttk.Label(top_frame, text=dish_name_entry.get(), font=("Segoe UI", 14, "bold")).grid(row=0, column=0, pady=5, sticky="w")
-        ttk.Label(top_frame, text=description_entry.get(), font=("Segoe UI", 11)).grid(row=1, column=0, pady=5, sticky="w")
+        top_frame.pack(fill="both", expand=True, side="top", pady=(50, 0))
+        bottom_frame = ttk.Frame(input_window, padding=15)
+        bottom_frame.pack(fill="both", expand=True, side="bottom")
 
-        # Frame for ingredients
-        ingredients_frame = ttk.Frame(center_frame)
-        ingredients_frame.grid(row=3, column=0, columnspan=2, pady=10)
+        # Show dish name and description at the top left corner
+        ttk.Label(top_frame, text=dish_name_entry.get(), font=("Segoe UI", 14, "bold")).pack(anchor="w", pady=5)
+        ttk.Label(top_frame, text=description_entry.get(), font=("Segoe UI", 11)).pack(anchor="w", pady=5)
+
+        # Scrollable frame for ingredients
+        ingredients_canvas = tk.Canvas(top_frame)
+        ingredients_scrollbar = ttk.Scrollbar(top_frame, orient="vertical", command=ingredients_canvas.yview)
+        ingredients_scrollable_frame = ttk.Frame(ingredients_canvas)
+
+        ingredients_scrollable_frame.bind(
+            "<Configure>",
+            lambda e: ingredients_canvas.configure(
+                scrollregion=ingredients_canvas.bbox("all")
+            )
+        )
+
+        ingredients_canvas.create_window((0, 0), window=ingredients_scrollable_frame, anchor="nw")
+        ingredients_canvas.configure(yscrollcommand=ingredients_scrollbar.set)
+
+        ingredients_canvas.pack(side="left", fill="both", expand=True)
+        ingredients_scrollbar.pack(side="right", fill="y")
 
         # Ingredient name
-        ingredient_name_entry = ttk.Entry(center_frame)
+        ingredient_name_entry = ttk.Entry(bottom_frame)
         ingredient_name_entry.insert(0, "Ingredient Name")
-        ingredient_name_entry.grid(row=4, column=0, pady=5)
+        ingredient_name_entry.pack(pady=5)
 
         # Quantity
-        quantity_entry = ttk.Entry(center_frame)
+        quantity_entry = ttk.Entry(bottom_frame)
         quantity_entry.insert(0, "Quantity")
-        quantity_entry.grid(row=5, column=0, pady=5)
+        quantity_entry.pack(pady=5)
 
         # Units dropdown
         units_var = tk.StringVar()
-        units_dropdown = ttk.Combobox(center_frame, textvariable=units_var, width=max(ingredient_name_entry.cget("width"), quantity_entry.cget("width")))
+        units_dropdown = ttk.Combobox(bottom_frame, width=16, textvariable=units_var)
         units_dropdown.set("Units")
-        units_dropdown['values'] = ("g", "ml", "Table spoons", "Tea spoons", "Cups", "Pieces", "Cans", "Bundles", "Packages")
-        units_dropdown.grid(row=6, column=0, pady=5)
+        units_dropdown['values'] = ("g", "ml", "Table spoons", "Tea spoons", "Cups", "Pieces", "Cans", "Bundles", "Packages", "Bottles", "Bags")
+        units_dropdown.pack(pady=5)
 
         ingredients = []
 
@@ -140,14 +163,16 @@ def input_dish_data(connection):
             units = units_var.get()
             ingredients.append((ingredient_name, quantity, units))
             ingredient_name_entry.delete(0, tk.END)
+            ingredient_name_entry.insert(0, "Ingredient Name")
             quantity_entry.delete(0, tk.END)
-            units_var.set("")
+            quantity_entry.insert(0, "Quantity")
+            units_var.set("Units")
 
             # Display added ingredients in real time
-            for widget in ingredients_frame.winfo_children():
+            for widget in ingredients_scrollable_frame.winfo_children():
                 widget.destroy()
             for index, (name, qty, unit) in enumerate(ingredients):
-                ttk.Label(ingredients_frame, text=f"{name} - {qty} {unit}").grid(row=index, column=0, columnspan=2, pady=5)
+                ttk.Label(ingredients_scrollable_frame, text=f"{name} - {qty} {unit}").pack(anchor="w", pady=5)
 
         def save_dish():
             dish_name = dish_name_entry.get()
@@ -173,12 +198,12 @@ def input_dish_data(connection):
             input_window.destroy()
 
         # Add new ingredient button
-        add_ingredient_button = ttk.Button(center_frame, text="Add New Ingredient", style="Accent.TButton", command=add_new_ingredient)
-        add_ingredient_button.grid(row=7, column=0, columnspan=2, pady=10)
+        add_ingredient_button = ttk.Button(bottom_frame, text="Add New Ingredient", style="Accent.TButton", command=add_new_ingredient)
+        add_ingredient_button.pack(pady=10)
 
         # Save dish button
-        save_dish_button = ttk.Button(center_frame, text="Save Dish", command=save_dish)
-        save_dish_button.grid(row=8, column=0, columnspan=2, pady=10)
+        save_dish_button = ttk.Button(bottom_frame, text="Save Dish", command=save_dish)
+        save_dish_button.pack(pady=10)
 
     # Add dish ingredients button
     add_ingredients_button = ttk.Button(center_frame, text="Add Dish Ingredients", style="Accent.TButton", command=add_ingredients_form)
@@ -194,7 +219,7 @@ def plan_menu(connection):
     # Create a new window
     show_window = tk.Toplevel()
     show_window.title("Plan Menu")
-    show_window.geometry("375x667")
+    show_window.geometry("500x667")
     sv_ttk.set_theme("light")
 
     # Create a frame to center the elements
@@ -236,6 +261,24 @@ def plan_menu(connection):
         messagebox.showinfo("Selection", f"Selected Dishes: {selected_dishes}")
         show_window.destroy()
 
+    # Scrollable frame for selected dishes
+    selected_dishes_canvas = tk.Canvas(center_frame)
+    selected_dishes_scrollbar = ttk.Scrollbar(center_frame, orient="vertical", command=selected_dishes_canvas.yview)
+    selected_dishes_scrollable_frame = ttk.Frame(selected_dishes_canvas)
+
+    selected_dishes_scrollable_frame.bind(
+        "<Configure>",
+        lambda e: selected_dishes_canvas.configure(
+            scrollregion=selected_dishes_canvas.bbox("all")
+        )
+    )
+
+    selected_dishes_canvas.create_window((0, 0), window=selected_dishes_scrollable_frame, anchor="nw")
+    selected_dishes_canvas.configure(yscrollcommand=selected_dishes_scrollbar.set)
+
+    selected_dishes_canvas.grid(row=0, column=0, columnspan=2, sticky="nsew")
+    selected_dishes_scrollbar.grid(row=0, column=2, sticky="ns")
+
     # Submit button
     submit_button = ttk.Button(center_frame, text="Save meal plan", command=submit_selection)
     submit_button.grid(row=len(dishes) + 1, column=0, columnspan=2, pady=10)
@@ -270,12 +313,30 @@ def extract_shopping_list(connection):
     # Create a new window
     show_window = tk.Toplevel()
     show_window.title("Shopping List")
-    show_window.geometry("375x667")
+    show_window.geometry("500x667")
     sv_ttk.set_theme("light")
 
     # Create a frame to center the elements
     center_frame = ttk.Frame(show_window)
     center_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+    # Scrollable frame for ingredients
+    ingredients_canvas = tk.Canvas(center_frame)
+    ingredients_scrollbar = ttk.Scrollbar(center_frame, orient="vertical", command=ingredients_canvas.yview)
+    ingredients_scrollable_frame = ttk.Frame(ingredients_canvas)
+
+    ingredients_scrollable_frame.bind(
+        "<Configure>",
+        lambda e: ingredients_canvas.configure(
+            scrollregion=ingredients_canvas.bbox("all")
+        )
+    )
+
+    ingredients_canvas.create_window((0, 0), window=ingredients_scrollable_frame, anchor="nw")
+    ingredients_canvas.configure(yscrollcommand=ingredients_scrollbar.set)
+
+    ingredients_canvas.pack(side="left", fill="both", expand=True)
+    ingredients_scrollbar.pack(side="right", fill="y")
 
     # Get the ingredients for the selected dishes
     ingredients = []
@@ -290,7 +351,7 @@ def extract_shopping_list(connection):
 
     for index, ingredient in enumerate(ingredients):
         ingredient_name, quantity = ingredient
-        ttk.Label(center_frame, text=f"{index+1}. {ingredient_name} - {quantity}").pack(anchor="w", pady=5)
+        ttk.Label(ingredients_scrollable_frame, text=f"{index+1}. {ingredient_name} - {quantity}").pack(anchor="w", pady=5)
 
 ############################################################################################################
 ############################################## GUI #########################################################
@@ -301,7 +362,7 @@ def draw_gui():
     # Create the main window
     root = tk.Tk()
     root.title("Dish Planner")
-    root.geometry("375x667") # Set the window size
+    root.geometry("500x667") # Set the window size
     sv_ttk.set_theme("light")
 
     # Create a frame to center the elements
