@@ -388,7 +388,7 @@ def draw_gui():
             sidebar.grid()
 
     # Add burger icon
-    burger_icon = tk.PhotoImage(file="icons/navigation.png")  # Ensure you have a burger_icon.png file in the same directory
+    burger_icon = tk.PhotoImage(file="/home/lampros/Coding Projects/DishPlanner/icons/navigation.png")  # Ensure you have a burger_icon.png file in the same directory
     burger_button = ttk.Button(root, image=burger_icon, command=toggle_sidebar)
     burger_button.place(x=10, y=10)
 
