@@ -82,34 +82,57 @@ class appWindow(ttk.Frame):
     # Configure menu buttons behavior
     def myPlanButtonClicked(self):
         for button in self.menuButtonsList:
-            button.configure(bg='#ffffff')
+            button.configure(bg='#fafafa')
         self.myPlanButton.configure(bg='#F8F0C0')
 
     def myDishesButtonClicked(self):
         for button in self.menuButtonsList:
-            button.configure(bg='#ffffff')
+            button.configure(bg='#fafafa')
         self.myDishes.configure(bg='#F8F0C0')
+        self.currentFrame = myDishesScreen(self.pageContentFrame)
 
     def ingredientsButtonClicked(self):
         for button in self.menuButtonsList:
-            button.configure(bg='#ffffff')
+            button.configure(bg='#fafafa')
         self.ingredients.configure(bg='#F8F0C0')
 
     def shoppingListButtonClicked(self):
         for button in self.menuButtonsList:
-            button.configure(bg='#ffffff')
+            button.configure(bg='#fafafa')
         self.shoppingList.configure(bg='#F8F0C0')
 
     def settingsButtonClicked(self):
         for button in self.menuButtonsList:
-            button.configure(bg='#ffffff')
+            button.configure(bg='#fafafa')
         self.settings.configure(bg='#F8F0C0')
 
     def userProfileButtonClicked(self):
         for button in self.menuButtonsList:
-            button.configure(bg='#ffffff')
+            button.configure(bg='#fafafa')
         self.userProfile.configure(bg='#F8F0C0')
 
+class myDishesScreen:
+    def __init__(self, parent):
+        self.parent = parent
+        self.createLayout()
+
+    def createLayout(self):
+        # Create header frame
+        self.headerFrame = ttk.Frame(self.parent, style='Card.TFrame')
+        self.headerFrame.place(x=0, y=0, relwidth=1, relheight=0.07)
+
+        # Create footer frame
+        self.footerFrame = ttk.Frame(self.parent, style='Card.TFrame')
+        self.footerFrame.place(x=0, rely=0.93, relwidth=1, relheight=0.07)
+
+        self.titleLabel = ttk.Label(self.headerFrame, text="My Dishes", font=('Segoe UI', 18, 'bold'))
+        self.titleLabel.place(x=7, rely=0.5, anchor='w')
+
+
+
+        self.addNewDishButtonIcon = tk.PhotoImage(file='/home/lampros/Coding Projects/DishPlanner/icons/plus.png')
+        self.addNewDishButton = ttk.Button(self.footerFrame, image=self.addNewDishButtonIcon, style='TButton')
+        self.addNewDishButton.place(relx=0.99, rely=0.5, anchor='e', width=70, height=50)
 # class addNewDishScreen():
 
 # class addNewIngredientScreen():
