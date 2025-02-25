@@ -79,37 +79,66 @@ class appWindow(ttk.Frame):
 
         self.menuButtonsList = [self.myPlanButton, self.myDishes, self.ingredients, self.shoppingList, self.settings, self.userProfile]
 
+    # Destroy the current frame
+    def emptyContentFrame(self, pageContentFrame):
+        for widget in pageContentFrame.winfo_children():
+            widget.destroy()
+
     # Configure menu buttons behavior
     def myPlanButtonClicked(self):
+        self.emptyContentFrame(self.pageContentFrame)
         for button in self.menuButtonsList:
             button.configure(bg='#fafafa')
         self.myPlanButton.configure(bg=self.accent_color)
+        self.currentFrame = myPlanScreen(self.pageContentFrame)
 
     def myDishesButtonClicked(self):
+        self.emptyContentFrame(self.pageContentFrame)
         for button in self.menuButtonsList:
             button.configure(bg='#fafafa')
         self.myDishes.configure(bg=self.accent_color)
         self.currentFrame = myDishesScreen(self.pageContentFrame)
 
     def ingredientsButtonClicked(self):
+        self.emptyContentFrame(self.pageContentFrame)
         for button in self.menuButtonsList:
             button.configure(bg='#fafafa')
         self.ingredients.configure(bg=self.accent_color)
+        self.currentFrame = ingredientsScreen(self.pageContentFrame)
 
     def shoppingListButtonClicked(self):
+        self.emptyContentFrame(self.pageContentFrame)
         for button in self.menuButtonsList:
             button.configure(bg='#fafafa')
         self.shoppingList.configure(bg=self.accent_color)
+        self.currentFrame = shoppingListScreen(self.pageContentFrame)
 
     def settingsButtonClicked(self):
+        self.emptyContentFrame(self.pageContentFrame)
         for button in self.menuButtonsList:
             button.configure(bg='#fafafa')
         self.settings.configure(bg=self.accent_color)
+        self.currentFrame = settingsScreen(self.pageContentFrame)
 
     def userProfileButtonClicked(self):
+        self.emptyContentFrame(self.pageContentFrame)
         for button in self.menuButtonsList:
             button.configure(bg='#fafafa')
         self.userProfile.configure(bg=self.accent_color)
+        self.currentFrame = userProfileScreen(self.pageContentFrame)
+
+class myPlanScreen():
+    def __init__(self, parent):
+        self.parent = parent
+        self.createLayout()
+
+    def createLayout(self):
+        # Create header frame
+        self.headerFrame = tk.Frame(self.parent)
+        self.headerFrame.place(x=0, y=0, relwidth=1, relheight=0.07)
+        # Create header title
+        self.titleLabel = ttk.Label(self.headerFrame, text="My Plan", font=('Segoe UI', 18, 'bold'))
+        self.titleLabel.place(x=7, rely=0.5, anchor='w')
 
 class myDishesScreen:
     def __init__(self, parent):
@@ -136,27 +165,75 @@ class myDishesScreen:
             for j in range(3):
                 self.dishFrame = ttk.Button(self.contentFrame, text=f'Dish {i+1}-{j+1}', style='TButton')
                 self.dishFrame.grid(row=i, column=j, padx=5, pady=5, sticky='nsew')
-                # self.dishLabel = ttk.Button(self.dishFrame, text=f'Dish {i+1}-{j+1}')
-                # self.dishLabel.grid(row=i, column=j, padx=0, pady=0, sticky='nsew')
-                # self.dishLabel.configure(background="#F8F0C0")
-                # self.dishLabel.place(x=0, y=0, relwidth=1, relheight=1, anchor='center')
 
         # Create footer frame
         self.footerFrame = tk.Frame(self.parent)
         self.footerFrame.place(x=0, rely=0.93, relwidth=1, relheight=0.07)
         # Create add new dish button
         self.addNewDishButtonIcon = tk.PhotoImage(file='/home/lampros/Coding Projects/DishPlanner/icons/plus.png')
-        self.addNewDishButton = ttk.Button(self.footerFrame, text='Add new dish', image=self.addNewDishButtonIcon, style='TButton')
+        self.addNewDishButton = ttk.Button(self.footerFrame, image=self.addNewDishButtonIcon, style='TButton')
         self.addNewDishButton.place(relx=0.993, rely=0.5, anchor='e', width=90, height=45)
-# class addNewDishScreen():
 
-# class addNewIngredientScreen():
+class ingredientsScreen():
+    def __init__(self, parent):
+        self.parent = parent
+        self.createLayout()
 
-# class addNewMealPlanScreen():
+    def createLayout(self):
+        # Create header frame
+        self.headerFrame = tk.Frame(self.parent)
+        self.headerFrame.place(x=0, y=0, relwidth=1, relheight=0.07)
+        # Create header title
+        self.titleLabel = ttk.Label(self.headerFrame, text="Ingredients", font=('Segoe UI', 18, 'bold'))
+        self.titleLabel.place(x=7, rely=0.5, anchor='w')
 
-# class viewIngredientsListScreen():
+        # Create footer frame
+        self.footerFrame = tk.Frame(self.parent)
+        self.footerFrame.place(x=0, rely=0.93, relwidth=1, relheight=0.07)
+        # Create add new dish button
+        self.addNewIngredientButtonIcon = tk.PhotoImage(file='/home/lampros/Coding Projects/DishPlanner/icons/plus.png')
+        self.addNewIngredientButton = ttk.Button(self.footerFrame, image=self.addNewIngredientButtonIcon, style='TButton')
+        self.addNewIngredientButton.place(relx=0.993, rely=0.5, anchor='e', width=90, height=45)
 
-# class shoppingListScreen():
+class shoppingListScreen():
+    def __init__(self, parent):
+        self.parent = parent
+        self.createLayout()
+
+    def createLayout(self):
+        # Create header frame
+        self.headerFrame = tk.Frame(self.parent)
+        self.headerFrame.place(x=0, y=0, relwidth=1, relheight=0.07)
+        # Create header title
+        self.titleLabel = ttk.Label(self.headerFrame, text="Shopping List", font=('Segoe UI', 18, 'bold'))
+        self.titleLabel.place(x=7, rely=0.5, anchor='w')
+
+class settingsScreen():
+    def __init__(self, parent):
+        self.parent = parent
+        self.createLayout()
+
+    def createLayout(self):
+        # Create header frame
+        self.headerFrame = tk.Frame(self.parent)
+        self.headerFrame.place(x=0, y=0, relwidth=1, relheight=0.07)
+        # Create header title
+        self.titleLabel = ttk.Label(self.headerFrame, text="Settings", font=('Segoe UI', 18, 'bold'))
+        self.titleLabel.place(x=7, rely=0.5, anchor='w')
+
+class userProfileScreen():
+    def __init__(self, parent):
+        self.parent = parent
+        self.createLayout()
+
+    def createLayout(self):
+        # Create header frame
+        self.headerFrame = tk.Frame(self.parent)
+        self.headerFrame.place(x=0, y=0, relwidth=1, relheight=0.07)
+        # Create header title
+        self.titleLabel = ttk.Label(self.headerFrame, text="User Profile", font=('Segoe UI', 18, 'bold'))
+        self.titleLabel.place(x=7, rely=0.5, anchor='w')
+
 
 if __name__ == '__main__':
     root = tk.Tk()
