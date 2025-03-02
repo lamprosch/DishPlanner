@@ -3,6 +3,12 @@ from tkinter import ttk
 from win32mica import ApplyMica, MicaTheme, MicaStyle
 import sv_ttk
 import pywinstyles, sys
+import ctypes
+
+# Set DPI awareness for better appearance on Windows
+try: ctypes.windll.shcore.SetProcessDpiAwareness(True)
+except Exception as e:
+    print(f"Failed to set DPI awareness: {e}")
 
 class appWindow(ttk.Frame):
     def __init__(self, master, controller):
@@ -209,6 +215,13 @@ class ingredientsScreen():
         # Create a scrollbar
         self.scrollbar = ttk.Scrollbar(self.contentFrame, orient='vertical')
         self.scrollbar.pack(side='right', fill='y')
+
+
+        # Create ingredients grid
+        for i in range(24):
+            self.ingredientFrame = ttk.Label(self.contentFrame, text=f'Ingredient {i+1}', style='TLabel')
+            # self.ingredientFrame.grid(row=i, column=0, padx=8, pady=8, sticky='nsew')
+            self.ingredientFrame.pack(padx=8, pady=8, fill='x')
 
         # Create footer frame
         self.footerFrame = tk.Frame(self.parent)
