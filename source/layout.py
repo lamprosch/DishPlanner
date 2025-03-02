@@ -212,16 +212,24 @@ class ingredientsScreen():
         # Create content frame
         self.contentFrame = tk.Frame(self.parent)
         self.contentFrame.place(x=0, rely=0.07, relwidth=1, relheight=0.86)
-        # Create a scrollbar
-        self.scrollbar = ttk.Scrollbar(self.contentFrame, orient='vertical')
+        # Create scrollable canvas
+        self.canvas = tk.Canvas(self.contentFrame, scrollregion=(0, 0, 0, 1000))
+        self.canvas.pack(fill='both', expand=True)
+        # Create scrollbar
+        self.scrollbar = ttk.Scrollbar(self.canvas, orient='vertical',command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.pack(side='right', fill='y')
-
-
-        # Create ingredients grid
-        for i in range(24):
-            self.ingredientFrame = ttk.Label(self.contentFrame, text=f'Ingredient {i+1}', style='TLabel')
-            # self.ingredientFrame.grid(row=i, column=0, padx=8, pady=8, sticky='nsew')
-            self.ingredientFrame.pack(padx=8, pady=8, fill='x')
+        self.canvas.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+        
+        #Create ingredients frame
+        self.ingredientsFrame = tk.Frame(self.canvas)
+        self.canvas.create_window((0,0), window=self.ingredientsFrame, anchor='nw')
+        # Create ingredients list
+        for i in range(20):
+            self.ingredientItem = ttk.Label(self.ingredientsFrame, text=f'Ingredient {i+1}', style='TLabel')
+            self.ingredientItem.pack(padx=8, pady=8, fill='x')
+        # Bind mouse wheel to scroll
+        self.canvas.bind_all("<MouseWheel>", lambda e: self.canvas.yview_scroll(-1 * (e.delta // 120), "units"))
 
         # Create footer frame
         self.footerFrame = tk.Frame(self.parent)
