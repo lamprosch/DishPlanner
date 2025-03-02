@@ -13,11 +13,13 @@ except Exception as e:
 class appWindow(ttk.Frame):
     def __init__(self, master, controller):
         self.master = master
-        self.master.geometry('900x600') # Set window size
+        self.master.geometry('1200x800') # Set window size
         self.master.minsize(600, 300) # Set minimum size
         self.master.title('WeekEats') # Set window title
         sv_ttk.set_theme('light') # Set theme
         self.apply_theme_to_titlebar() # Apply theme to title bar
+        self.button_font = ('Segoe UI Semibold', 16, )
+        self.accent_color = '#E6E6FA'
 
         # Apply Mica theme
         hwnd = self.master.winfo_id()
@@ -42,15 +44,12 @@ class appWindow(ttk.Frame):
         self.pageContentFrame.place(x=6, y=6, relwidth=0.98, relheight=0.98)
 
         # Configure the menu frame
-        self.menuButtonsFrame.rowconfigure((0,1,2,3,4,5,6,7,8,9,10), weight=1, uniform='a')
+        self.menuButtonsFrame.rowconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13), weight=1, uniform='a')
         self.menuButtonsFrame.columnconfigure((0), weight=1, uniform='a')
 
 
     # Draw the menu buttons
     def addWidgets(self):
-        self.button_font = ('Segoe UI Variable Text Semibold', 14, )
-        self.accent_color = '#007acc'
-        
         # Load icons
         self.myPlanButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/my_plan.png')
         self.myDishesButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/my_dishes.png')
@@ -82,12 +81,12 @@ class appWindow(ttk.Frame):
         # Create the "Settings" button
         self.settings = tk.Button(self.menuButtonsFrame, activebackground=self.accent_color, activeforeground='#1e1e1e', text='  Settings', anchor='w', font=self.button_font, image=self.settingsButtonIcon, compound='left', command=self.settingsButtonClicked)
         self.settings.configure(borderwidth=0)
-        self.settings.grid(row=9, column=0, padx=3, pady=3, sticky='nsew')
+        self.settings.grid(row=12, column=0, padx=3, pady=3, sticky='nsew')
 
         # Create the "User Profile" button
         self.userProfile = tk.Button(self.menuButtonsFrame, activebackground=self.accent_color, activeforeground='#1e1e1e', text='  User Profile', anchor='w', font=self.button_font, image=self.userProfileButtonIcon, compound='left', command=self.userProfileButtonClicked)
         self.userProfile.configure(borderwidth=0)
-        self.userProfile.grid(row=10, column=0, padx=3, pady=3, sticky='nsew')
+        self.userProfile.grid(row=13, column=0, padx=3, pady=3, sticky='nsew')
 
         self.menuButtonsList = [self.myPlanButton, self.myDishes, self.ingredients, self.shoppingList, self.settings, self.userProfile]
 
@@ -159,7 +158,7 @@ class myPlanScreen():
         self.headerFrame = tk.Frame(self.parent)
         self.headerFrame.place(x=0, y=0, relwidth=1, relheight=0.07)
         # Create header title
-        self.titleLabel = ttk.Label(self.headerFrame, text="My Plan", font=('Segoe UI', 18, 'bold'))
+        self.titleLabel = ttk.Label(self.headerFrame, text="My Plan", font=('Segoe UI', 24, 'bold'))
         self.titleLabel.place(x=7, rely=0.5, anchor='w')
 
 class myDishesScreen:
@@ -172,7 +171,7 @@ class myDishesScreen:
         self.headerFrame = tk.Frame(self.parent)
         self.headerFrame.place(x=0, y=0, relwidth=1, relheight=0.07)
         # Create header title
-        self.titleLabel = ttk.Label(self.headerFrame, text="My Dishes", font=('Segoe UI', 18, 'bold'))
+        self.titleLabel = ttk.Label(self.headerFrame, text="My Dishes", font=('Segoe UI', 24, 'bold'))
         self.titleLabel.place(x=7, rely=0.5, anchor='w')
 
         # Create content frame
@@ -206,14 +205,14 @@ class ingredientsScreen():
         self.headerFrame = tk.Frame(self.parent)
         self.headerFrame.place(x=0, y=0, relwidth=1, relheight=0.07)
         # Create header title
-        self.titleLabel = ttk.Label(self.headerFrame, text="Ingredients", font=('Segoe UI', 18, 'bold'))
+        self.titleLabel = ttk.Label(self.headerFrame, text="Ingredients", font=('Segoe UI', 24, 'bold'))
         self.titleLabel.place(x=7, rely=0.5, anchor='w')
 
         # Create content frame
         self.contentFrame = tk.Frame(self.parent)
         self.contentFrame.place(x=0, rely=0.07, relwidth=1, relheight=0.86)
         # Create scrollable canvas
-        self.canvas = tk.Canvas(self.contentFrame, scrollregion=(0, 0, 0, 1000))
+        self.canvas = tk.Canvas(self.contentFrame)
         self.canvas.pack(fill='both', expand=True)
         # Create scrollbar
         self.scrollbar = ttk.Scrollbar(self.canvas, orient='vertical',command=self.canvas.yview)
@@ -223,11 +222,12 @@ class ingredientsScreen():
         
         #Create ingredients frame
         self.ingredientsFrame = tk.Frame(self.canvas)
-        self.canvas.create_window((0,0), window=self.ingredientsFrame, anchor='nw')
+        self.canvas.create_window((0,0), window=self.ingredientsFrame, anchor='nw', width=self.parent.winfo_width() - 25)
         # Create ingredients list
         for i in range(20):
-            self.ingredientItem = ttk.Label(self.ingredientsFrame, text=f'Ingredient {i+1}', style='TLabel')
-            self.ingredientItem.pack(padx=8, pady=8, fill='x')
+            self.ingredientItem = ttk.Label(self.ingredientsFrame, text=f'Ingredient {i+1}', font=('Segoe UI', 16), background= "#E6E6FA", padding=(17, 17))
+            self.ingredientItem.pack(padx=3, pady=2, fill='x')
+            
         # Bind mouse wheel to scroll
         self.canvas.bind_all("<MouseWheel>", lambda e: self.canvas.yview_scroll(-1 * (e.delta // 120), "units"))
 
@@ -249,7 +249,7 @@ class shoppingListScreen():
         self.headerFrame = tk.Frame(self.parent)
         self.headerFrame.place(x=0, y=0, relwidth=1, relheight=0.07)
         # Create header title
-        self.titleLabel = ttk.Label(self.headerFrame, text="Shopping List", font=('Segoe UI', 18, 'bold'))
+        self.titleLabel = ttk.Label(self.headerFrame, text="Shopping List", font=('Segoe UI', 24, 'bold'))
         self.titleLabel.place(x=7, rely=0.5, anchor='w')
 
 class settingsScreen():
@@ -262,7 +262,7 @@ class settingsScreen():
         self.headerFrame = tk.Frame(self.parent)
         self.headerFrame.place(x=0, y=0, relwidth=1, relheight=0.07)
         # Create header title
-        self.titleLabel = ttk.Label(self.headerFrame, text="Settings", font=('Segoe UI', 18, 'bold'))
+        self.titleLabel = ttk.Label(self.headerFrame, text="Settings", font=('Segoe UI', 24, 'bold'))
         self.titleLabel.place(x=7, rely=0.5, anchor='w')
 
 class userProfileScreen():
@@ -275,17 +275,8 @@ class userProfileScreen():
         self.headerFrame = tk.Frame(self.parent)
         self.headerFrame.place(x=0, y=0, relwidth=1, relheight=0.07)
         # Create header title
-        self.titleLabel = ttk.Label(self.headerFrame, text="User Profile", font=('Segoe UI', 18, 'bold'))
+        self.titleLabel = ttk.Label(self.headerFrame, text="User Profile", font=('Segoe UI', 24, 'bold'))
         self.titleLabel.place(x=7, rely=0.5, anchor='w')
-
-class testApp():
-    def __init__(self, master, controller):
-        self.master = master
-        self.master.geometry('300x300') # Set window size
-        self.master.minsize(600, 300) # Set minimum size
-        self.master.title('Test') # Set window title
-
-        tk.Label(self.master, text='Test', font=("Georgia", 24)).pack()
 
 
 if __name__ == '__main__':
