@@ -173,14 +173,14 @@ class myDishesScreen:
         self.contentFrame = tk.Frame(self.parent)
         self.contentFrame.place(x=0, rely=0.07, relwidth=1, relheight=0.86)
         # Configure grid layout
-        self.contentFrame.rowconfigure((0,1,2), weight=1, uniform='a')
-        self.contentFrame.columnconfigure((0,1,2), weight=1, uniform='a')
+        self.contentFrame.rowconfigure((0,1,2,3), weight=1, uniform='a')
+        self.contentFrame.columnconfigure((0,1,2,3), weight=1, uniform='a')
         
         # Create dishes grid
-        for i in range(3):
-            for j in range(3):
+        for i in range(4):
+            for j in range(4):
                 self.dishFrame = ttk.Button(self.contentFrame, text=f'Dish {i+1}-{j+1}', style='TButton')
-                self.dishFrame.grid(row=i, column=j, padx=25, pady=30, sticky='nsew')
+                self.dishFrame.grid(row=i, column=j, padx=8, pady=8, sticky='nsew')
 
         # Create footer frame
         self.footerFrame = tk.Frame(self.parent)
@@ -202,6 +202,13 @@ class ingredientsScreen():
         # Create header title
         self.titleLabel = ttk.Label(self.headerFrame, text="Ingredients", font=('Segoe UI', 18, 'bold'))
         self.titleLabel.place(x=7, rely=0.5, anchor='w')
+
+        # Create content frame
+        self.contentFrame = tk.Frame(self.parent)
+        self.contentFrame.place(x=0, rely=0.07, relwidth=1, relheight=0.86)
+        # Create a scrollbar
+        self.scrollbar = ttk.Scrollbar(self.contentFrame, orient='vertical')
+        self.scrollbar.pack(side='right', fill='y')
 
         # Create footer frame
         self.footerFrame = tk.Frame(self.parent)
@@ -249,6 +256,15 @@ class userProfileScreen():
         # Create header title
         self.titleLabel = ttk.Label(self.headerFrame, text="User Profile", font=('Segoe UI', 18, 'bold'))
         self.titleLabel.place(x=7, rely=0.5, anchor='w')
+
+class testApp():
+    def __init__(self, master, controller):
+        self.master = master
+        self.master.geometry('300x300') # Set window size
+        self.master.minsize(600, 300) # Set minimum size
+        self.master.title('Test') # Set window title
+
+        tk.Label(self.master, text='Test', font=("Georgia", 24)).pack()
 
 
 if __name__ == '__main__':
