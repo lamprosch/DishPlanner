@@ -247,7 +247,7 @@ class ingredientsScreen():
         self.editIngredientButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/edit.png')
         self.deleteIngredientButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/delete.png')
 
-        for i in range(20):
+        for i in range(7):
             self.ingredientItem = ttk.Label(self.ingredientsFrame, text=f'Ingredient {i+1}', font=('Segoe UI', 17), background= "#f8f7f9", padding=(22, 22))
             self.editButton = ttk.Button(self.ingredientItem, image=self.editIngredientButtonIcon, style='TButton')
             self.deleteButton = ttk.Button(self.ingredientItem, image=self.deleteIngredientButtonIcon, style='TButton')
@@ -257,6 +257,9 @@ class ingredientsScreen():
             # Bind hover effect to menu buttons
             self.ingredientItem.bind("<Enter>", lambda e: e.widget.configure(background="#eaeaea"))
             self.ingredientItem.bind("<Leave>", lambda e: e.widget.configure(background='#f8f7f9'))
+
+        # Update scrollbar visibility
+        updateScrollbarVisibility(self.scrollbar, self.ingredientsFrame)
 
 class shoppingListScreen():
     def __init__(self, parent):
@@ -283,22 +286,30 @@ class shoppingListScreen():
         self.scrollbar.pack(side='right', fill='y')
         self.canvas.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
         
-        #Create ingredients frame
+        #Create shopping list frame
         self.shoppingListFrame = tk.Frame(self.canvas)
         self.canvas.create_window((0,0), window=self.shoppingListFrame, anchor='nw', width=self.parent.winfo_width() - 25)
         
-        # Create ingredients list
+        # Create shopping list
         self.fillShoppingList()
             
         # Bind mouse wheel to scroll
         self.canvas.bind_all("<MouseWheel>", lambda e: self.canvas.yview_scroll(-1 * (e.delta // 120), "units"))
+
+        # Create footer frame
+        self.footerFrame = tk.Frame(self.parent)
+        self.footerFrame.place(x=0, rely=0.93, relwidth=1, relheight=0.07)
+        # Create add new shopping item button
+        self.addNewShoppingItemButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/plus.png')
+        self.addNewShoppingItemButton = ttk.Button(self.footerFrame, style='TButton', image=self.addNewShoppingItemButtonIcon)
+        self.addNewShoppingItemButton.place(relx=0.96, rely=0.6, anchor='e', width=110, height=40)
 
 
     def fillShoppingList(self):
         self.editShoppingItemButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/edit.png')
         self.deleteShoppingItemButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/delete.png')
 
-        for i in range(20):
+        for i in range(6):
             self.shoppingItem = ttk.Label(self.shoppingListFrame, text=f'Shopping Item {i+1}', font=('Segoe UI', 17), background= "#f8f7f9", padding=(22, 22))
             self.editButton = ttk.Button(self.shoppingItem, image=self.editShoppingItemButtonIcon, style='TButton')
             self.deleteButton = ttk.Button(self.shoppingItem, image=self.deleteShoppingItemButtonIcon, style='TButton')
@@ -308,6 +319,9 @@ class shoppingListScreen():
             # Bind hover effect to menu buttons
             self.shoppingItem.bind("<Enter>", lambda e: e.widget.configure(background="#eaeaea"))
             self.shoppingItem.bind("<Leave>", lambda e: e.widget.configure(background='#f8f7f9'))
+
+        # Update scrollbar visibility
+        updateScrollbarVisibility(self.scrollbar, self.shoppingListFrame)
 
 class settingsScreen():
     def __init__(self, parent):
@@ -335,6 +349,15 @@ class userProfileScreen():
         self.titleLabel = ttk.Label(self.headerFrame, text="User Profile", font=('Segoe UI', 24, 'bold'))
         self.titleLabel.place(x=7, rely=0.5, anchor='w')
 
+# Utility functions
+
+# Update scrollbar visibility based on the number of items in a frame
+def updateScrollbarVisibility(scrollbar, frame, threshold=10):
+    num_items = len(frame.winfo_children())
+    if num_items < threshold:
+        scrollbar.pack_forget()
+    else:
+        scrollbar.pack(side='right', fill='y')
 
 if __name__ == '__main__':
     root = tk.Tk()
