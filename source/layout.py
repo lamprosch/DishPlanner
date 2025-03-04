@@ -23,7 +23,7 @@ class appWindow(ttk.Frame):
 
         # Apply Mica theme
         hwnd = self.master.winfo_id()
-        ApplyMica(HWND=hwnd, Theme=MicaTheme.DARK, Style=MicaStyle.DEFAULT)
+        ApplyMica(HWND=hwnd, Theme=MicaTheme.LIGHT, Style=MicaStyle.DEFAULT)
 
         self.createLayout() # Call the createLayout method 
         self.addWidgets() # Call the addWidgets method
@@ -152,7 +152,6 @@ class appWindow(ttk.Frame):
                 pywinstyles.change_header_color(self.master, color="#1c1c1c")
                 sv_ttk.set_theme('dark')
 
-
 class myPlanScreen():
     def __init__(self, parent):
         self.parent = parent
@@ -214,10 +213,10 @@ class myDishesScreen:
         self.editDishButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/edit.png')
         self.deleteDishButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/delete.png')
 
-        for i in range(10):
+        for i in range(12):
             self.dishItem = ttk.Label(self.dishesFrame, text=f'Dish {i+1}', font=('Segoe UI', 17), background= "#f8f7f9", padding=(22, 22))
             self.editButton = ttk.Button(self.dishItem, image=self.editDishButtonIcon, style='TButton')
-            self.deleteButton = ttk.Button(self.dishItem, image=self.deleteDishButtonIcon, style='TButton')
+            self.deleteButton = ttk.Button(self.dishItem, image=self.deleteDishButtonIcon, style='TButton', command=lambda item=self.dishItem: self.deleteButtonClicked(item))
             self.editButton.place(relx=0.91, rely=0.5, anchor='e', width=45, height=40)
             self.deleteButton.place(relx=0.99, rely=0.5, anchor='e', width=45, height=40)
             self.dishItem.pack(padx=3, pady=2, fill='x')  
@@ -226,6 +225,11 @@ class myDishesScreen:
             self.dishItem.bind("<Leave>", lambda e: e.widget.configure(background='#f8f7f9'))
 
         # Update scrollbar visibility
+        updateScrollbarVisibility(self.scrollbar, self.dishesFrame)
+
+    def deleteButtonClicked(self, item):
+        # Remove dish from database
+        item.destroy()
         updateScrollbarVisibility(self.scrollbar, self.dishesFrame)
 
 class ingredientsScreen():
@@ -278,7 +282,7 @@ class ingredientsScreen():
         for i in range(7):
             self.ingredientItem = ttk.Label(self.ingredientsFrame, text=f'Ingredient {i+1}', font=('Segoe UI', 17), background= "#f8f7f9", padding=(22, 22))
             self.editButton = ttk.Button(self.ingredientItem, image=self.editIngredientButtonIcon, style='TButton')
-            self.deleteButton = ttk.Button(self.ingredientItem, image=self.deleteIngredientButtonIcon, style='TButton')
+            self.deleteButton = ttk.Button(self.ingredientItem, image=self.deleteIngredientButtonIcon, style='TButton', command=lambda item=self.ingredientItem: self.deleteButtonClicked(item))
             self.editButton.place(relx=0.91, rely=0.5, anchor='e', width=45, height=40)
             self.deleteButton.place(relx=0.99, rely=0.5, anchor='e', width=45, height=40)
             self.ingredientItem.pack(padx=3, pady=2, fill='x')
@@ -288,6 +292,9 @@ class ingredientsScreen():
 
         # Update scrollbar visibility
         updateScrollbarVisibility(self.scrollbar, self.ingredientsFrame)
+
+    def deleteButtonClicked(self, item):
+        item.destroy()
 
 class shoppingListScreen():
     def __init__(self, parent):
@@ -340,7 +347,7 @@ class shoppingListScreen():
         for i in range(6):
             self.shoppingItem = ttk.Label(self.shoppingListFrame, text=f'Shopping Item {i+1}', font=('Segoe UI', 17), background= "#f8f7f9", padding=(22, 22))
             self.editButton = ttk.Button(self.shoppingItem, image=self.editShoppingItemButtonIcon, style='TButton')
-            self.deleteButton = ttk.Button(self.shoppingItem, image=self.deleteShoppingItemButtonIcon, style='TButton')
+            self.deleteButton = ttk.Button(self.shoppingItem, image=self.deleteShoppingItemButtonIcon, style='TButton', command=lambda item=self.shoppingItem: self.deleButtonClicked(item))
             self.editButton.place(relx=0.91, rely=0.5, anchor='e', width=45, height=40)
             self.deleteButton.place(relx=0.99, rely=0.5, anchor='e', width=45, height=40)
             self.shoppingItem.pack(padx=3, pady=2, fill='x')
@@ -350,6 +357,9 @@ class shoppingListScreen():
 
         # Update scrollbar visibility
         updateScrollbarVisibility(self.scrollbar, self.shoppingListFrame)
+
+    def deleButtonClicked(self, item):
+        item.destroy()
 
 class settingsScreen():
     def __init__(self, parent):
@@ -378,7 +388,7 @@ class userProfileScreen():
         self.titleLabel.place(x=7, rely=0.5, anchor='w')
 
 # Utility functions
-
+        
 # Update scrollbar visibility based on the number of items in a frame
 def updateScrollbarVisibility(scrollbar, frame, threshold=10):
     num_items = len(frame.winfo_children())
@@ -386,7 +396,7 @@ def updateScrollbarVisibility(scrollbar, frame, threshold=10):
         scrollbar.pack_forget()
     else:
         scrollbar.pack(side='right', fill='y')
-
+    
 if __name__ == '__main__':
     root = tk.Tk()
     root.tk.call('tk', 'scaling', 1.0)
