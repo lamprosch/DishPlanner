@@ -182,15 +182,25 @@ class myDishesScreen:
         # Create content frame
         self.contentFrame = tk.Frame(self.parent)
         self.contentFrame.place(x=0, rely=0.07, relwidth=1, relheight=0.86)
-        # Configure grid layout
-        self.contentFrame.rowconfigure((0,1,2,3), weight=1, uniform='a')
-        self.contentFrame.columnconfigure((0,1,2,3), weight=1, uniform='a')
+        # Create scrollable canvas
+        self.canvas = tk.Canvas(self.contentFrame)
+        self.canvas.pack(fill='both', expand=True)
+        # Create scrollbar
+        self.scrollbar = ttk.Scrollbar(self.canvas, orient='vertical',command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+        self.scrollbar.pack(side='right', fill='y')
+        self.canvas.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
         
-        # Create dishes grid
-        for i in range(4):
-            for j in range(4):
-                self.dishFrame = ttk.Button(self.contentFrame, text=f'Dish {i+1}-{j+1}', style='TButton')
-                self.dishFrame.grid(row=i, column=j, padx=8, pady=8, sticky='nsew')
+        #Create ingredients frame
+        self.dishesFrame = tk.Frame(self.canvas)
+        self.canvas.create_window((0,0), window=self.dishesFrame, anchor='nw', width=self.parent.winfo_width() - 25)
+        
+        # Create ingredients list
+        self.fillDishesList()
+            
+        # Bind mouse wheel to scroll
+        self.canvas.bind_all("<MouseWheel>", lambda e: self.canvas.yview_scroll(-1 * (e.delta // 120), "units"))
+
 
         # Create footer frame
         self.footerFrame = tk.Frame(self.parent)
@@ -199,6 +209,24 @@ class myDishesScreen:
         self.addNewDishButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/plus.png')
         self.addNewDishButton = ttk.Button(self.footerFrame, image=self.addNewDishButtonIcon, style='TButton')
         self.addNewDishButton.place(relx=0.993, rely=0.5, anchor='e', width=90, height=45)
+
+    def fillDishesList(self):
+        self.editDishButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/edit.png')
+        self.deleteDishButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/delete.png')
+
+        for i in range(10):
+            self.dishItem = ttk.Label(self.dishesFrame, text=f'Dish {i+1}', font=('Segoe UI', 17), background= "#f8f7f9", padding=(22, 22))
+            self.editButton = ttk.Button(self.dishItem, image=self.editDishButtonIcon, style='TButton')
+            self.deleteButton = ttk.Button(self.dishItem, image=self.deleteDishButtonIcon, style='TButton')
+            self.editButton.place(relx=0.91, rely=0.5, anchor='e', width=45, height=40)
+            self.deleteButton.place(relx=0.99, rely=0.5, anchor='e', width=45, height=40)
+            self.dishItem.pack(padx=3, pady=2, fill='x')  
+             # Bind hover effect to menu buttons
+            self.dishItem.bind("<Enter>", lambda e: e.widget.configure(background="#eaeaea"))
+            self.dishItem.bind("<Leave>", lambda e: e.widget.configure(background='#f8f7f9'))
+
+        # Update scrollbar visibility
+        updateScrollbarVisibility(self.scrollbar, self.dishesFrame)
 
 class ingredientsScreen():
     def __init__(self, parent):
