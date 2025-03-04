@@ -18,8 +18,8 @@ class appWindow(ttk.Frame):
         self.master.title('WeekEats') # Set window title
         sv_ttk.set_theme('light') # Set theme
         self.apply_theme_to_titlebar() # Apply theme to title bar
-        self.button_font = ('Segoe UI Semibold', 16, )
-        self.accent_color = '#E6E6FA'
+        self.button_font = ('Segoe UI', 17, )
+        self.accent_color = '#eaeaea'
 
         # Apply Mica theme
         hwnd = self.master.winfo_id()
@@ -89,6 +89,11 @@ class appWindow(ttk.Frame):
         self.userProfile.grid(row=13, column=0, padx=3, pady=3, sticky='nsew')
 
         self.menuButtonsList = [self.myPlanButton, self.myDishes, self.ingredients, self.shoppingList, self.settings, self.userProfile]
+
+        # Bind hover effect to menu buttons
+        for button in self.menuButtonsList:
+            button.bind("<Enter>", lambda e: e.widget.configure(bg=self.accent_color))
+            button.bind("<Leave>", lambda e: e.widget.configure(bg='#fafafa'))
 
     # Destroy the current frame
     def emptyContentFrame(self, pageContentFrame):
@@ -223,10 +228,9 @@ class ingredientsScreen():
         #Create ingredients frame
         self.ingredientsFrame = tk.Frame(self.canvas)
         self.canvas.create_window((0,0), window=self.ingredientsFrame, anchor='nw', width=self.parent.winfo_width() - 25)
+        
         # Create ingredients list
-        for i in range(20):
-            self.ingredientItem = ttk.Label(self.ingredientsFrame, text=f'Ingredient {i+1}', font=('Segoe UI', 16), background= "#E6E6FA", padding=(17, 17))
-            self.ingredientItem.pack(padx=3, pady=2, fill='x')
+        self.fillIngredientsList()
             
         # Bind mouse wheel to scroll
         self.canvas.bind_all("<MouseWheel>", lambda e: self.canvas.yview_scroll(-1 * (e.delta // 120), "units"))
@@ -236,8 +240,23 @@ class ingredientsScreen():
         self.footerFrame.place(x=0, rely=0.93, relwidth=1, relheight=0.07)
         # Create add new ingredient button
         self.addNewIngredientButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/plus.png')
-        self.addNewIngredientButton = ttk.Button(self.footerFrame, image=self.addNewIngredientButtonIcon, style='TButton')
-        self.addNewIngredientButton.place(relx=0.993, rely=0.5, anchor='e', width=90, height=45)
+        self.addNewIngredientButton = ttk.Button(self.footerFrame, style='TButton', image=self.addNewIngredientButtonIcon)
+        self.addNewIngredientButton.place(relx=0.96, rely=0.6, anchor='e', width=110, height=40)
+
+    def fillIngredientsList(self):
+        self.editIngredientButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/edit.png')
+        self.deleteIngredientButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/delete.png')
+
+        for i in range(20):
+            self.ingredientItem = ttk.Label(self.ingredientsFrame, text=f'Ingredient {i+1}', font=('Segoe UI', 17), background= "#f8f7f9", padding=(22, 22))
+            self.editButton = ttk.Button(self.ingredientItem, image=self.editIngredientButtonIcon, style='TButton')
+            self.deleteButton = ttk.Button(self.ingredientItem, image=self.deleteIngredientButtonIcon, style='TButton')
+            self.editButton.place(relx=0.91, rely=0.5, anchor='e', width=45, height=40)
+            self.deleteButton.place(relx=0.99, rely=0.5, anchor='e', width=45, height=40)
+            self.ingredientItem.pack(padx=3, pady=2, fill='x')
+            # Bind hover effect to menu buttons
+            self.ingredientItem.bind("<Enter>", lambda e: e.widget.configure(background="#eaeaea"))
+            self.ingredientItem.bind("<Leave>", lambda e: e.widget.configure(background='#f8f7f9'))
 
 class shoppingListScreen():
     def __init__(self, parent):
@@ -251,6 +270,44 @@ class shoppingListScreen():
         # Create header title
         self.titleLabel = ttk.Label(self.headerFrame, text="Shopping List", font=('Segoe UI', 24, 'bold'))
         self.titleLabel.place(x=7, rely=0.5, anchor='w')
+
+        # Create content frame
+        self.contentFrame = tk.Frame(self.parent)
+        self.contentFrame.place(x=0, rely=0.07, relwidth=1, relheight=0.86)
+        # Create scrollable canvas
+        self.canvas = tk.Canvas(self.contentFrame)
+        self.canvas.pack(fill='both', expand=True)
+        # Create scrollbar
+        self.scrollbar = ttk.Scrollbar(self.canvas, orient='vertical',command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+        self.scrollbar.pack(side='right', fill='y')
+        self.canvas.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+        
+        #Create ingredients frame
+        self.shoppingListFrame = tk.Frame(self.canvas)
+        self.canvas.create_window((0,0), window=self.shoppingListFrame, anchor='nw', width=self.parent.winfo_width() - 25)
+        
+        # Create ingredients list
+        self.fillShoppingList()
+            
+        # Bind mouse wheel to scroll
+        self.canvas.bind_all("<MouseWheel>", lambda e: self.canvas.yview_scroll(-1 * (e.delta // 120), "units"))
+
+
+    def fillShoppingList(self):
+        self.editShoppingItemButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/edit.png')
+        self.deleteShoppingItemButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/delete.png')
+
+        for i in range(20):
+            self.shoppingItem = ttk.Label(self.shoppingListFrame, text=f'Shopping Item {i+1}', font=('Segoe UI', 17), background= "#f8f7f9", padding=(22, 22))
+            self.editButton = ttk.Button(self.shoppingItem, image=self.editShoppingItemButtonIcon, style='TButton')
+            self.deleteButton = ttk.Button(self.shoppingItem, image=self.deleteShoppingItemButtonIcon, style='TButton')
+            self.editButton.place(relx=0.91, rely=0.5, anchor='e', width=45, height=40)
+            self.deleteButton.place(relx=0.99, rely=0.5, anchor='e', width=45, height=40)
+            self.shoppingItem.pack(padx=3, pady=2, fill='x')
+            # Bind hover effect to menu buttons
+            self.shoppingItem.bind("<Enter>", lambda e: e.widget.configure(background="#eaeaea"))
+            self.shoppingItem.bind("<Leave>", lambda e: e.widget.configure(background='#f8f7f9'))
 
 class settingsScreen():
     def __init__(self, parent):
