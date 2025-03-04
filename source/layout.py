@@ -12,6 +12,7 @@ except Exception as e:
 
 class appWindow(ttk.Frame):
     def __init__(self, master, controller):
+        super().__init__(master)
         self.master = master
         self.master.geometry('1200x800') # Set window size
         self.master.minsize(600, 300) # Set minimum size
@@ -282,6 +283,7 @@ class ingredientsScreen():
         for i in range(7):
             self.ingredientItem = ttk.Label(self.ingredientsFrame, text=f'Ingredient {i+1}', font=('Segoe UI', 17), background= "#f8f7f9", padding=(22, 22))
             self.editButton = ttk.Button(self.ingredientItem, image=self.editIngredientButtonIcon, style='TButton')
+            self.editButton.bind("<Button-1>", self.editButtonClicked)
             self.deleteButton = ttk.Button(self.ingredientItem, image=self.deleteIngredientButtonIcon, style='TButton', command=lambda item=self.ingredientItem: self.deleteButtonClicked(item))
             self.editButton.place(relx=0.91, rely=0.5, anchor='e', width=45, height=40)
             self.deleteButton.place(relx=0.99, rely=0.5, anchor='e', width=45, height=40)
@@ -294,7 +296,13 @@ class ingredientsScreen():
         updateScrollbarVisibility(self.scrollbar, self.ingredientsFrame)
 
     def deleteButtonClicked(self, item):
+        # Remove ingredient from database
         item.destroy()
+        updateScrollbarVisibility(self.scrollbar, self.ingredientsFrame)
+
+    def editButtonClicked(self, e):
+        # Open ingredient editor
+        editWindow(self.parent, e.widget.master.cget("text"))
 
 class shoppingListScreen():
     def __init__(self, parent):
@@ -386,6 +394,36 @@ class userProfileScreen():
         # Create header title
         self.titleLabel = ttk.Label(self.headerFrame, text="User Profile", font=('Segoe UI', 24, 'bold'))
         self.titleLabel.place(x=7, rely=0.5, anchor='w')
+
+class editWindow(tk.Toplevel):
+    def __init__(self, parent, item_name):
+        super().__init__(parent)
+        self.parent = parent
+        self.item_name = item_name
+        self.geometry('300x200')
+        self.title('Edit Ingredient')
+        self.update_idletasks()  # Ensure the window size is calculated
+        self.geometry(f"+{self.master.winfo_rootx() + self.master.winfo_width() // 2 - self.winfo_width() // 2}+{self.master.winfo_rooty() + self.master.winfo_height() // 2 - self.winfo_height() // 2}")
+        self.transient(self.parent)
+        self.grab_set()
+        self.focus_set()
+        self.addWidgets()
+        self.wait_window(self)
+
+    def addWidgets(self):
+        # Create the name entry
+        self.nameEntry = ttk.Entry(self, font=('Segoe UI', 16))
+        self.nameEntry.insert(0, self.item_name)
+        self.nameEntry.select_range(0, 'end')
+        self.nameEntry.focus()
+        self.nameEntry.place(x=20, y=50, width=260, height=40)
+        # Create the save button
+        self.saveButton = ttk.Button(self, text='Save', style='Accent.TButton')
+        self.saveButton.place(relx=0.88, rely=0.8, anchor='e', width=100, height=40)
+        # Create the cancel button
+        self.cancelButton = ttk.Button(self, text='Cancel', style='TButton', command=self.destroy)
+        self.cancelButton.place(relx=0.12, rely=0.8, anchor='w', width=100, height=40)
+
 
 # Utility functions
         
