@@ -32,21 +32,21 @@ class appWindow(ttk.Frame):
 
     def createLayout(self):
         # Create the menu placeholder
-        self.menuFrame = tk.Frame(self.master)
+        self.menuFrame = tk.Frame(self.master, background="#eaeaea")
         self.menuFrame.place(x=0, y=0, relwidth=0.3, relheight=1)
         # Create the page placeholder
         self.pageFrame = tk.Frame(self.master)
         self.pageFrame.place(relx=0.3, y=0, relwidth=0.7, relheight=1)
         # Create the menu buttons placeholder
         self.menuButtonsFrame = ttk.Frame(self.menuFrame, style='Card.TFrame')
-        self.menuButtonsFrame.place(x=6, y=6, relwidth=0.97, relheight=0.98)
+        # self.menuButtonsFrame.place(x=6, y=6, relwidth=0.97, relheight=0.98)
         # Create the page content placeholder
         self.pageContentFrame = ttk.Frame(self.pageFrame, style='Card.TFrame')
         self.pageContentFrame.place(x=6, y=6, relwidth=0.98, relheight=0.98)
 
         # Configure the menu frame
-        self.menuButtonsFrame.rowconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13), weight=1, uniform='a')
-        self.menuButtonsFrame.columnconfigure((0), weight=1, uniform='a')
+        self.menuFrame.rowconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13), weight=1, uniform='a')
+        self.menuFrame.columnconfigure((0), weight=1, uniform='a')
 
 
     # Draw the menu buttons
@@ -60,41 +60,41 @@ class appWindow(ttk.Frame):
         self.userProfileButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/user.png')
 
         # Create the "My Plan" button
-        self.myPlanButton = tk.Button(self.menuButtonsFrame, activebackground=self.accent_color, activeforeground='#1e1e1e', text='  My Plan', anchor='w', font=self.button_font, image=self.myPlanButtonIcon, compound='left', command=self.myPlanButtonClicked)
+        self.myPlanButton = tk.Button(self.menuFrame, text='  My Plan', anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground='#404040', font=self.button_font, image=self.myPlanButtonIcon, compound='left', relief='sunken', command=self.myPlanButtonClicked)
         self.myPlanButton.configure(borderwidth=0)
-        self.myPlanButton.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
+        self.myPlanButton.grid(row=0, column=0, padx=5, pady=3, sticky='nsew')
 
         # Create the "My Dishes" button
-        self.myDishes = tk.Button(self.menuButtonsFrame, activebackground=self.accent_color, activeforeground='#1e1e1e', text='  My Dishes', anchor='w', font=self.button_font, image=self.myDishesButtonIcon, compound='left', command=self.myDishesButtonClicked)
+        self.myDishes = tk.Button(self.menuFrame, text='  My Dishes', anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground='#404040', font=self.button_font, image=self.myDishesButtonIcon, compound='left', relief='sunken', command=self.myDishesButtonClicked)
         self.myDishes.configure(borderwidth=0)
-        self.myDishes.grid(row=1, column=0, padx=3, pady=3, sticky='nsew')
+        self.myDishes.grid(row=1, column=0, padx=5, pady=3, sticky='nsew')
 
         # Create the "Ingredients" button
-        self.ingredients = tk.Button(self.menuButtonsFrame, activebackground=self.accent_color, activeforeground='#1e1e1e', text='  Ingredients', anchor='w', font=self.button_font, image=self.ingredientsButtonIcon, compound='left', command=self.ingredientsButtonClicked)
+        self.ingredients = tk.Button(self.menuFrame, text='  Ingredients', anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground='#404040', font=self.button_font, image=self.ingredientsButtonIcon, compound='left', relief='sunken', command=self.ingredientsButtonClicked)
         self.ingredients.configure(borderwidth=0)
-        self.ingredients.grid(row=2, column=0, padx=3, pady=3, sticky='nsew')
+        self.ingredients.grid(row=2, column=0, padx=5, pady=3, sticky='nsew')
 
         # Create the "Shopping List" button
-        self.shoppingList = tk.Button(self.menuButtonsFrame, activebackground=self.accent_color, activeforeground='#1e1e1e', text='  Shopping List', anchor='w', font=self.button_font, image=self.shoppingListButtonIcon, compound='left', command=self.shoppingListButtonClicked)
+        self.shoppingList = tk.Button(self.menuFrame, text='  Shopping List', anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground='#404040', font=self.button_font, image=self.shoppingListButtonIcon, compound='left', relief='sunken', command=self.shoppingListButtonClicked)
         self.shoppingList.configure(borderwidth=0)
-        self.shoppingList.grid(row=3, column=0, padx=3, pady=3, sticky='nsew')
+        self.shoppingList.grid(row=3, column=0, padx=5, pady=3, sticky='nsew')
 
         # Create the "Settings" button
-        self.settings = tk.Button(self.menuButtonsFrame, activebackground=self.accent_color, activeforeground='#1e1e1e', text='  Settings', anchor='w', font=self.button_font, image=self.settingsButtonIcon, compound='left', command=self.settingsButtonClicked)
+        self.settings = tk.Button(self.menuFrame, text='  Settings', anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground='#404040', font=self.button_font, image=self.settingsButtonIcon, compound='left', relief='sunken', command=self.settingsButtonClicked)
         self.settings.configure(borderwidth=0)
-        self.settings.grid(row=12, column=0, padx=3, pady=3, sticky='nsew')
+        self.settings.grid(row=12, column=0, padx=5, pady=3, sticky='nsew')
 
         # Create the "User Profile" button
-        self.userProfile = tk.Button(self.menuButtonsFrame, activebackground=self.accent_color, activeforeground='#1e1e1e', text='  User Profile', anchor='w', font=self.button_font, image=self.userProfileButtonIcon, compound='left', command=self.userProfileButtonClicked)
+        self.userProfile = tk.Button(self.menuFrame, text='  User Profile', anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground='#404040', font=self.button_font, image=self.userProfileButtonIcon, compound='left', relief='sunken', command=self.userProfileButtonClicked)
         self.userProfile.configure(borderwidth=0)
-        self.userProfile.grid(row=13, column=0, padx=3, pady=3, sticky='nsew')
+        self.userProfile.grid(row=13, column=0, padx=5, pady=3, sticky='nsew')
 
         self.menuButtonsList = [self.myPlanButton, self.myDishes, self.ingredients, self.shoppingList, self.settings, self.userProfile]
 
         # Bind hover effect to menu buttons
         for button in self.menuButtonsList:
-            button.bind("<Enter>", lambda e: e.widget.configure(bg=self.accent_color))
-            button.bind("<Leave>", lambda e: e.widget.configure(bg='#fafafa'))
+            button.bind("<Enter>", lambda e, b=button: b.configure(bg='#dadada' if b.cget('bg') == '#eaeaea' else '#fafafa'))
+            button.bind("<Leave>", lambda e, b=button: b.configure(bg='#eaeaea' if b.cget('bg') == '#dadada' else b.cget('bg')))
 
     # Destroy the current frame
     def emptyContentFrame(self, pageContentFrame):
@@ -102,46 +102,44 @@ class appWindow(ttk.Frame):
             widget.destroy()
 
     # Configure menu buttons behavior
-    def myPlanButtonClicked(self):
-        self.emptyContentFrame(self.pageContentFrame)
+    def resetButtonColors(self):
         for button in self.menuButtonsList:
-            button.configure(bg='#fafafa')
-        self.myPlanButton.configure(bg=self.accent_color)
+            button.configure(bg='#eaeaea')
+
+    def myPlanButtonClicked(self):
+        self.resetButtonColors()
+        self.emptyContentFrame(self.pageContentFrame)
+        self.myPlanButton.configure(bg='#fafafa')
         self.currentFrame = myPlanScreen(self.pageContentFrame)
 
     def myDishesButtonClicked(self):
+        self.resetButtonColors()
         self.emptyContentFrame(self.pageContentFrame)
-        for button in self.menuButtonsList:
-            button.configure(bg='#fafafa')
-        self.myDishes.configure(bg=self.accent_color)
+        self.myDishes.configure(bg='#fafafa')
         self.currentFrame = myDishesScreen(self.pageContentFrame)
 
     def ingredientsButtonClicked(self):
+        self.resetButtonColors()
         self.emptyContentFrame(self.pageContentFrame)
-        for button in self.menuButtonsList:
-            button.configure(bg='#fafafa')
-        self.ingredients.configure(bg=self.accent_color)
+        self.ingredients.configure(bg='#fafafa')
         self.currentFrame = ingredientsScreen(self.pageContentFrame)
 
     def shoppingListButtonClicked(self):
+        self.resetButtonColors()
         self.emptyContentFrame(self.pageContentFrame)
-        for button in self.menuButtonsList:
-            button.configure(bg='#fafafa')
-        self.shoppingList.configure(bg=self.accent_color)
+        self.shoppingList.configure(bg='#fafafa')
         self.currentFrame = shoppingListScreen(self.pageContentFrame)
 
     def settingsButtonClicked(self):
+        self.resetButtonColors()
         self.emptyContentFrame(self.pageContentFrame)
-        for button in self.menuButtonsList:
-            button.configure(bg='#fafafa')
-        self.settings.configure(bg=self.accent_color)
+        self.settings.configure(bg='#fafafa')
         self.currentFrame = settingsScreen(self.pageContentFrame)
 
     def userProfileButtonClicked(self):
+        self.resetButtonColors()
         self.emptyContentFrame(self.pageContentFrame)
-        for button in self.menuButtonsList:
-            button.configure(bg='#fafafa')
-        self.userProfile.configure(bg=self.accent_color)
+        self.userProfile.configure(bg='#fafafa')
         self.currentFrame = userProfileScreen(self.pageContentFrame)
 
     def apply_theme_to_titlebar(self):
@@ -221,7 +219,7 @@ class myDishesScreen:
             self.editButton.place(relx=0.91, rely=0.5, anchor='e', width=45, height=40)
             self.deleteButton.place(relx=0.99, rely=0.5, anchor='e', width=45, height=40)
             self.dishItem.pack(padx=3, pady=2, fill='x')  
-             # Bind hover effect to menu buttons
+            # Bind hover effect to menu buttons
             self.dishItem.bind("<Enter>", lambda e: e.widget.configure(background="#eaeaea"))
             self.dishItem.bind("<Leave>", lambda e: e.widget.configure(background='#f8f7f9'))
 
@@ -352,7 +350,7 @@ class shoppingListScreen():
         self.editShoppingItemButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/edit.png')
         self.deleteShoppingItemButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/delete.png')
 
-        for i in range(6):
+        for i in range(26):
             self.shoppingItem = ttk.Label(self.shoppingListFrame, text=f'Shopping Item {i+1}', font=('Segoe UI', 17), background= "#f8f7f9", padding=(22, 22))
             self.editButton = ttk.Button(self.shoppingItem, image=self.editShoppingItemButtonIcon, style='TButton')
             self.deleteButton = ttk.Button(self.shoppingItem, image=self.deleteShoppingItemButtonIcon, style='TButton', command=lambda item=self.shoppingItem: self.deleButtonClicked(item))
@@ -367,6 +365,7 @@ class shoppingListScreen():
         updateScrollbarVisibility(self.scrollbar, self.shoppingListFrame)
 
     def deleButtonClicked(self, item):
+        # Remove shopping item from database
         item.destroy()
 
 class settingsScreen():
