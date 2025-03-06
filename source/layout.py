@@ -37,9 +37,6 @@ class appWindow(ttk.Frame):
         # Create the page placeholder
         self.pageFrame = tk.Frame(self.master)
         self.pageFrame.place(relx=0.3, y=0, relwidth=0.7, relheight=1)
-        # Create the menu buttons placeholder
-        self.menuButtonsFrame = ttk.Frame(self.menuFrame, style='Card.TFrame')
-        # self.menuButtonsFrame.place(x=6, y=6, relwidth=0.97, relheight=0.98)
         # Create the page content placeholder
         self.pageContentFrame = ttk.Frame(self.pageFrame, style='Card.TFrame')
         self.pageContentFrame.place(x=6, y=6, relwidth=0.98, relheight=0.98)
@@ -351,7 +348,9 @@ class shoppingListScreen():
         self.deleteShoppingItemButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/delete.png')
 
         for i in range(26):
-            self.shoppingItem = ttk.Label(self.shoppingListFrame, text=f'Shopping Item {i+1}', font=('Segoe UI', 17), background= "#f8f7f9", padding=(22, 22))
+            self.shoppingItem = ttk.Label(self.shoppingListFrame, text=f'      Shopping Item {i+1}',anchor='w', font=('Segoe UI', 17), background= "#f8f7f9", padding=(22, 22))
+            self.shoppingCheckbox = ttk.Radiobutton(self.shoppingItem, value=0)
+            self.shoppingCheckbox.place(relx=0.01, rely=0.5, anchor='w')
             self.editButton = ttk.Button(self.shoppingItem, image=self.editShoppingItemButtonIcon, style='TButton')
             self.deleteButton = ttk.Button(self.shoppingItem, image=self.deleteShoppingItemButtonIcon, style='TButton', command=lambda item=self.shoppingItem: self.deleButtonClicked(item))
             self.editButton.place(relx=0.91, rely=0.5, anchor='e', width=45, height=40)
