@@ -4,6 +4,7 @@ from win32mica import ApplyMica, MicaTheme, MicaStyle
 import sv_ttk
 import pywinstyles, sys
 import ctypes
+import ntkutils
 
 # Set DPI awareness for better appearance on Windows
 try: ctypes.windll.shcore.SetProcessDpiAwareness(True)
@@ -18,13 +19,14 @@ class appWindow(ttk.Frame):
         self.master.minsize(600, 300) # Set minimum size
         self.master.title('WeekEats') # Set window title
         sv_ttk.set_theme('light') # Set theme
+        self.master.iconbitmap('/DishPlanner/icons/icon.ico')
         self.apply_theme_to_titlebar() # Apply theme to title bar
         self.button_font = ('Segoe UI', 17, )
         self.accent_color = '#eaeaea'
 
         # Apply Mica theme
-        hwnd = self.master.winfo_id()
-        ApplyMica(HWND=hwnd, Theme=MicaTheme.LIGHT, Style=MicaStyle.DEFAULT)
+        # hwnd = self.master.winfo_id()
+        # ApplyMica(HWND=hwnd, Theme=MicaTheme.LIGHT, Style=MicaStyle.DEFAULT)
 
         self.createLayout() # Call the createLayout method 
         self.addWidgets() # Call the addWidgets method
@@ -160,6 +162,18 @@ class myPlanScreen():
         # Create header title
         self.titleLabel = ttk.Label(self.headerFrame, text="My Plan", font=('Segoe UI', 24, 'bold'))
         self.titleLabel.place(x=7, rely=0.5, anchor='w')
+
+        # Create content frame
+        self.contentFrame = tk.Frame(self.parent)
+        self.contentFrame.place(x=0, rely=0.07, relwidth=1, relheight=0.86)
+        # Create scrollable canvas
+        self.canvas = tk.Canvas(self.contentFrame)
+        self.canvas.pack(fill='both', expand=True)
+        # Create scrollbar
+        self.scrollbar = ttk.Scrollbar(self.canvas, orient='vertical',command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+        self.scrollbar.pack(side='right', fill='y')
+        self.canvas.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
 
 class myDishesScreen:
     def __init__(self, parent):
@@ -437,4 +451,5 @@ if __name__ == '__main__':
     root = tk.Tk()
     root.tk.call('tk', 'scaling', 1.0)
     app = appWindow(root, None)
+    ntkutils.blur_window_background(root)
     root.mainloop()
