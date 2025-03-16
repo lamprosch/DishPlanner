@@ -175,6 +175,46 @@ class myPlanScreen():
         self.scrollbar.pack(side='right', fill='y')
         self.canvas.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
 
+        #Create dishes frame
+        self.plansFrame = tk.Frame(self.canvas)
+        self.canvas.create_window((0,0), window=self.plansFrame, anchor='nw', width=self.parent.winfo_width() - 25)
+        
+        # Create dishes list
+        self.fillPlansList()
+            
+        # Bind mouse wheel to scroll
+        self.canvas.bind_all("<MouseWheel>", lambda e: self.canvas.yview_scroll(-1 * (e.delta // 120), "units"))
+
+        # Create footer frame
+        self.footerFrame = tk.Frame(self.parent)
+        self.footerFrame.place(x=0, rely=0.93, relwidth=1, relheight=0.07)
+        # Create add new dish button
+        self.addNewPlanButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/plus.png')
+        self.addNewPlanButton = ttk.Button(self.footerFrame, image=self.addNewPlanButtonIcon, style='TButton')
+        self.addNewPlanButton.place(relx=0.993, rely=0.5, anchor='e', width=90, height=45)
+
+    def fillPlansList(self):
+        self.editPlanButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/edit.png')
+        self.deletePlanButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/delete.png')
+
+        for i in range(1):
+            self.planItem = ttk.Label(self.plansFrame, text=f'Dish {i+1}', font=('Segoe UI', 17), background= "#f8f7f9", padding=(80, 80))
+            self.editButton = tk.Button(self.planItem, image=self.editPlanButtonIcon)
+            self.editButton.configure(background='#f8f7f9', activebackground='#eaeaea', borderwidth=0)
+            self.deleteButton = tk.Button(self.planItem, image=self.deletePlanButtonIcon, command=lambda item=self.planItem: self.deleteButtonClicked(item))
+            self.deleteButton.configure(background='#f8f7f9', activebackground='#eaeaea', borderwidth=0)
+            self.editButton.place(relx=0.91, rely=0.5, anchor='e', width=45, height=40)
+            self.deleteButton.place(relx=0.99, rely=0.5, anchor='e', width=45, height=40)
+            self.planItem.pack(padx=3, pady=2, fill='x')  
+            # Bind hover effect to menu buttons
+            self.planItem.bind("<Enter>", lambda e: e.widget.configure(background="#eaeaea"))
+            self.planItem.bind("<Leave>", lambda e: e.widget.configure(background='#f8f7f9'))
+
+        # Update scrollbar visibility
+        updateScrollbarVisibility(self.scrollbar, self.plansFrame)
+
+
+
 class myDishesScreen:
     def __init__(self, parent):
         self.parent = parent
@@ -200,11 +240,11 @@ class myDishesScreen:
         self.scrollbar.pack(side='right', fill='y')
         self.canvas.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
         
-        #Create ingredients frame
+        #Create dishes frame
         self.dishesFrame = tk.Frame(self.canvas)
         self.canvas.create_window((0,0), window=self.dishesFrame, anchor='nw', width=self.parent.winfo_width() - 25)
         
-        # Create ingredients list
+        # Create dishes list
         self.fillDishesList()
             
         # Bind mouse wheel to scroll
