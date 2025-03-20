@@ -268,6 +268,7 @@ class myDishesScreen:
             self.editButton = ttk.Button(self.dishItem, image=self.editDishButtonIcon, style='TButton')
             self.deleteButton = ttk.Button(self.dishItem, image=self.deleteDishButtonIcon, style='TButton', command=lambda item=self.dishItem: self.deleteButtonClicked(item))
             self.editButton.place(relx=0.91, rely=0.5, anchor='e', width=45, height=40)
+            self.editButton.bind("<Button-1>", self.editButtonClicked)
             self.deleteButton.place(relx=0.99, rely=0.5, anchor='e', width=45, height=40)
             self.dishItem.pack(padx=3, pady=2, fill='x')  
             # Bind hover effect to menu buttons
@@ -281,6 +282,11 @@ class myDishesScreen:
         # Remove dish from database
         item.destroy()
         updateScrollbarVisibility(self.scrollbar, self.dishesFrame)
+
+    def editButtonClicked(self, e):
+        # Open ingredient editor
+        editWindow(self.parent, e.widget.master.cget("text"), "Edit Dish")
+
 
 class ingredientsScreen():
     def __init__(self, parent):
@@ -351,7 +357,7 @@ class ingredientsScreen():
 
     def editButtonClicked(self, e):
         # Open ingredient editor
-        editWindow(self.parent, e.widget.master.cget("text"))
+        editWindow(self.parent, e.widget.master.cget("text"), "Edit Ingredient")
 
 class shoppingListScreen():
     def __init__(self, parent):
@@ -448,12 +454,12 @@ class userProfileScreen():
         self.titleLabel.place(x=7, rely=0.5, anchor='w')
 
 class editWindow(tk.Toplevel):
-    def __init__(self, parent, item_name):
+    def __init__(self, parent, item_name, title):
         super().__init__(parent)
         self.parent = parent
         self.item_name = item_name
         self.geometry('300x200')
-        self.title('Edit Ingredient')
+        self.title(title)
         self.update_idletasks()  # Ensure the window size is calculated
         self.geometry(f"+{self.master.winfo_rootx() + self.master.winfo_width() // 2 - self.winfo_width() // 2}+{self.master.winfo_rooty() + self.master.winfo_height() // 2 - self.winfo_height() // 2}")
         self.transient(self.parent)
