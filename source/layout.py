@@ -15,18 +15,14 @@ class appWindow(ttk.Frame):
     def __init__(self, master, controller):
         super().__init__(master)
         self.master = master
-        self.master.geometry('1200x800') # Set window size
+        self.master.geometry('1125x800') # Set window size
         self.master.minsize(600, 300) # Set minimum size
         self.master.title('WeekEats') # Set window title
         sv_ttk.set_theme('light') # Set theme
         self.master.iconbitmap('/DishPlanner/icons/icon.ico')
         self.apply_theme_to_titlebar() # Apply theme to title bar
-        self.button_font = ('Segoe UI', 17, )
+        self.button_font = ('Segoe UI', 14)
         self.accent_color = '#eaeaea'
-
-        # Apply Mica theme
-        # hwnd = self.master.winfo_id()
-        # ApplyMica(HWND=hwnd, Theme=MicaTheme.LIGHT, Style=MicaStyle.DEFAULT)
 
         self.createLayout() # Call the createLayout method 
         self.addWidgets() # Call the addWidgets method
@@ -44,22 +40,22 @@ class appWindow(ttk.Frame):
         self.pageContentFrame.place(x=6, y=6, relwidth=0.98, relheight=0.98)
 
         # Configure the menu frame
-        self.menuFrame.rowconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13), weight=1, uniform='a')
+        self.menuFrame.rowconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17), weight=1, uniform='a')
         self.menuFrame.columnconfigure((0), weight=1, uniform='a')
 
 
     # Draw the menu buttons
     def addWidgets(self):
         # Load icons
-        self.myPlanButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/my_plan.png')
+        self.myPlanButtonIcon = "\uE787 \u2002 My Plan"
         self.myDishesButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/my_dishes.png')
-        self.ingredientsButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/ingredients.png')
-        self.shoppingListButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/shopping_list.png')
-        self.settingsButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/settings.png')
-        self.userProfileButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/user.png')
+        self.ingredientsButtonIcon = "\uEC09 \u2002 Ingredients"
+        self.shoppingListButtonIcon = "\uE7bf \u2002 Shopping List"
+        self.settingsButtonIcon = "\uE713 \u2002 Settings"
+        self.userProfileButtonIcon = "\uE77b \u2002 User Profile"
 
         # Create the "My Plan" button
-        self.myPlanButton = tk.Button(self.menuFrame, text='  My Plan', anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground='#404040', font=self.button_font, image=self.myPlanButtonIcon, compound='left', relief='sunken', command=self.myPlanButtonClicked)
+        self.myPlanButton = tk.Button(self.menuFrame, text=self.myPlanButtonIcon, anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground='#404040', font=self.button_font, compound='left', relief='sunken', command=self.myPlanButtonClicked)
         self.myPlanButton.configure(borderwidth=0)
         self.myPlanButton.grid(row=0, column=0, padx=5, pady=3, sticky='nsew')
 
@@ -69,24 +65,24 @@ class appWindow(ttk.Frame):
         self.myDishes.grid(row=1, column=0, padx=5, pady=3, sticky='nsew')
 
         # Create the "Ingredients" button
-        self.ingredients = tk.Button(self.menuFrame, text='  Ingredients', anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground='#404040', font=self.button_font, image=self.ingredientsButtonIcon, compound='left', relief='sunken', command=self.ingredientsButtonClicked)
+        self.ingredients = tk.Button(self.menuFrame, text=self.ingredientsButtonIcon, anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground='#404040', font=self.button_font, compound='left', relief='sunken', command=self.ingredientsButtonClicked)
         self.ingredients.configure(borderwidth=0)
         self.ingredients.grid(row=2, column=0, padx=5, pady=3, sticky='nsew')
 
         # Create the "Shopping List" button
-        self.shoppingList = tk.Button(self.menuFrame, text='  Shopping List', anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground='#404040', font=self.button_font, image=self.shoppingListButtonIcon, compound='left', relief='sunken', command=self.shoppingListButtonClicked)
+        self.shoppingList = tk.Button(self.menuFrame, text=self.shoppingListButtonIcon, anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground='#404040', font=self.button_font, compound='left', relief='sunken', command=self.shoppingListButtonClicked)
         self.shoppingList.configure(borderwidth=0)
         self.shoppingList.grid(row=3, column=0, padx=5, pady=3, sticky='nsew')
 
         # Create the "Settings" button
-        self.settings = tk.Button(self.menuFrame, text='  Settings', anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground='#404040', font=self.button_font, image=self.settingsButtonIcon, compound='left', relief='sunken', command=self.settingsButtonClicked)
+        self.settings = tk.Button(self.menuFrame, text=self.settingsButtonIcon, anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground="#404040", font=self.button_font, compound='left', relief='sunken', command=self.settingsButtonClicked)
         self.settings.configure(borderwidth=0)
-        self.settings.grid(row=12, column=0, padx=5, pady=3, sticky='nsew')
+        self.settings.grid(row=16, column=0, padx=5, pady=3, sticky='nsew')
 
         # Create the "User Profile" button
-        self.userProfile = tk.Button(self.menuFrame, text='  User Profile', anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground='#404040', font=self.button_font, image=self.userProfileButtonIcon, compound='left', relief='sunken', command=self.userProfileButtonClicked)
+        self.userProfile = tk.Button(self.menuFrame, text=self.userProfileButtonIcon, anchor='w', background="#eaeaea", activebackground="#ffffff", activeforeground="#404040", font=self.button_font, compound='left', relief='sunken', command=self.userProfileButtonClicked)
         self.userProfile.configure(borderwidth=0)
-        self.userProfile.grid(row=13, column=0, padx=5, pady=3, sticky='nsew')
+        self.userProfile.grid(row=17, column=0, padx=5, pady=3, sticky='nsew')
 
         self.menuButtonsList = [self.myPlanButton, self.myDishes, self.ingredients, self.shoppingList, self.settings, self.userProfile]
 
@@ -258,15 +254,21 @@ class myDishesScreen:
         self.addNewDishButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/plus.png')
         self.addNewDishButton = ttk.Button(self.footerFrame, image=self.addNewDishButtonIcon, style='TButton')
         self.addNewDishButton.place(relx=0.993, rely=0.5, anchor='e', width=90, height=45)
+        self.addNewDishButton.bind("<Button-1>", self.addNewDishButtonClicked)
 
     def fillDishesList(self):
-        self.editDishButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/edit.png')
-        self.deleteDishButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/delete.png')
+        self.editDishButtonIcon = "\uE932"
+        self.deleteDishButtonIcon = "\uE74d"
 
         for i in range(12):
-            self.dishItem = ttk.Label(self.dishesFrame, text=f'Dish {i+1}', font=('Segoe UI', 17), background= "#f8f7f9", padding=(22, 22))
-            self.editButton = ttk.Button(self.dishItem, image=self.editDishButtonIcon, style='TButton')
-            self.deleteButton = ttk.Button(self.dishItem, image=self.deleteDishButtonIcon, style='TButton', command=lambda item=self.dishItem: self.deleteButtonClicked(item))
+            self.dishItem = ttk.Label(self.dishesFrame, text=f'Dish {i+1}', font=('Segoe UI', 14), background= "#f8f7f9", padding=(22, 22))
+            self.editButton = ttk.Button(self.dishItem, text=self.editDishButtonIcon, style='TButton', command=None)
+            self.deleteButton = ttk.Button(self.dishItem, text=self.deleteDishButtonIcon, style='TButton', command=lambda item=self.dishItem: self.deleteButtonClicked(item))
+            style = ttk.Style()
+            style.configure("DeleteButton.TButton", font=('Segoe UI', 16))
+            style.configure("EditButton.TButton", font=('Segoe UI', 16))
+            self.deleteButton.configure(style="DeleteButton.TButton")
+            self.editButton.configure(style="EditButton.TButton")
             self.editButton.place(relx=0.91, rely=0.5, anchor='e', width=45, height=40)
             self.editButton.bind("<Button-1>", self.editButtonClicked)
             self.deleteButton.place(relx=0.99, rely=0.5, anchor='e', width=45, height=40)
@@ -286,6 +288,9 @@ class myDishesScreen:
     def editButtonClicked(self, e):
         # Open ingredient editor
         editWindow(self.parent, e.widget.master.cget("text"), "Edit Dish")
+
+    def addNewDishButtonClicked(self, e=None):
+        addNewDish(self.parent, "Add New Dish")
 
 
 class ingredientsScreen():
@@ -326,20 +331,27 @@ class ingredientsScreen():
         # Create footer frame
         self.footerFrame = tk.Frame(self.parent)
         self.footerFrame.place(x=0, rely=0.93, relwidth=1, relheight=0.07)
+
         # Create add new ingredient button
         self.addNewIngredientButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/plus.png')
         self.addNewIngredientButton = ttk.Button(self.footerFrame, style='TButton', image=self.addNewIngredientButtonIcon)
         self.addNewIngredientButton.place(relx=0.96, rely=0.6, anchor='e', width=110, height=40)
+        self.addNewIngredientButton.bind("<Button-1>", self.addNewIngredientButtonClicked)
 
     def fillIngredientsList(self):
-        self.editIngredientButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/edit.png')
-        self.deleteIngredientButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/delete.png')
+        self.editIngredientButtonIcon = "\uE932"
+        self.deleteIngredientButtonIcon = "\uE74d"
 
         for i in range(7):
-            self.ingredientItem = ttk.Label(self.ingredientsFrame, text=f'Ingredient {i+1}', font=('Segoe UI', 17), background= "#f8f7f9", padding=(22, 22))
-            self.editButton = ttk.Button(self.ingredientItem, image=self.editIngredientButtonIcon, style='TButton')
+            self.ingredientItem = ttk.Label(self.ingredientsFrame, text=f'Ingredient {i+1}', font=('Segoe UI', 14), background= "#f8f7f9", padding=(22, 22))
+            self.editButton = ttk.Button(self.ingredientItem, text=self.editIngredientButtonIcon, style='TButton')
             self.editButton.bind("<Button-1>", self.editButtonClicked)
-            self.deleteButton = ttk.Button(self.ingredientItem, image=self.deleteIngredientButtonIcon, style='TButton', command=lambda item=self.ingredientItem: self.deleteButtonClicked(item))
+            self.deleteButton = ttk.Button(self.ingredientItem, text=self.deleteIngredientButtonIcon, style='TButton', command=lambda item=self.ingredientItem: self.deleteButtonClicked(item))
+            style = ttk.Style()
+            style.configure("DeleteButton.TButton", font=('Segoe UI', 16))
+            style.configure("EditButton.TButton", font=('Segoe UI', 16))
+            self.deleteButton.configure(style="DeleteButton.TButton")
+            self.editButton.configure(style="EditButton.TButton")
             self.editButton.place(relx=0.91, rely=0.5, anchor='e', width=45, height=40)
             self.deleteButton.place(relx=0.99, rely=0.5, anchor='e', width=45, height=40)
             self.ingredientItem.pack(padx=3, pady=2, fill='x')
@@ -358,6 +370,9 @@ class ingredientsScreen():
     def editButtonClicked(self, e):
         # Open ingredient editor
         editWindow(self.parent, e.widget.master.cget("text"), "Edit Ingredient")
+    
+    def addNewIngredientButtonClicked(self, e=None):
+        addWindow(root, self.parent, "Add Ingredient 1")
 
 class shoppingListScreen():
     def __init__(self, parent):
@@ -404,15 +419,20 @@ class shoppingListScreen():
 
 
     def fillShoppingList(self):
-        self.editShoppingItemButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/edit.png')
-        self.deleteShoppingItemButtonIcon = tk.PhotoImage(file='/DishPlanner/icons/delete.png')
+        self.editShoppingItemButtonIcon = "\uE932"
+        self.deleteShoppingItemButtonIcon = "\uE74d"
 
         for i in range(26):
-            self.shoppingItem = ttk.Label(self.shoppingListFrame, text=f'      Shopping Item {i+1}',anchor='w', font=('Segoe UI', 17), background= "#f8f7f9", padding=(22, 22))
+            self.shoppingItem = ttk.Label(self.shoppingListFrame, text=f'      Shopping Item {i+1}',anchor='w', font=('Segoe UI', 14), background= "#f8f7f9", padding=(22, 22))
             self.shoppingCheckbox = ttk.Radiobutton(self.shoppingItem, value=0)
             self.shoppingCheckbox.place(relx=0.01, rely=0.5, anchor='w')
-            self.editButton = ttk.Button(self.shoppingItem, image=self.editShoppingItemButtonIcon, style='TButton')
-            self.deleteButton = ttk.Button(self.shoppingItem, image=self.deleteShoppingItemButtonIcon, style='TButton', command=lambda item=self.shoppingItem: self.deleButtonClicked(item))
+            self.editButton = ttk.Button(self.shoppingItem, text=self.editShoppingItemButtonIcon, style='TButton')
+            self.deleteButton = ttk.Button(self.shoppingItem, text=self.deleteShoppingItemButtonIcon, style='TButton', command=lambda item=self.shoppingItem: self.deleButtonClicked(item))
+            style = ttk.Style()
+            style.configure("DeleteButton.TButton", font=('Segoe UI', 16))
+            style.configure("EditButton.TButton", font=('Segoe UI', 16))
+            self.deleteButton.configure(style="DeleteButton.TButton")
+            self.editButton.configure(style="EditButton.TButton")
             self.editButton.place(relx=0.91, rely=0.5, anchor='e', width=45, height=40)
             self.deleteButton.place(relx=0.99, rely=0.5, anchor='e', width=45, height=40)
             self.shoppingItem.pack(padx=3, pady=2, fill='x')
@@ -458,7 +478,6 @@ class editWindow(tk.Toplevel):
         super().__init__(parent)
         self.parent = parent
         self.item_name = item_name
-        self.geometry('300x200')
         self.title(title)
         self.update_idletasks()  # Ensure the window size is calculated
         self.geometry(f"+{self.master.winfo_rootx() + self.master.winfo_width() // 2 - self.winfo_width() // 2}+{self.master.winfo_rooty() + self.master.winfo_height() // 2 - self.winfo_height() // 2}")
@@ -482,6 +501,71 @@ class editWindow(tk.Toplevel):
         self.cancelButton = ttk.Button(self, text='Cancel', style='TButton', command=self.destroy)
         self.cancelButton.place(relx=0.12, rely=0.8, anchor='w', width=100, height=40)
 
+class addWindow(tk.Toplevel):
+    def __init__(self, root, parent, title):
+        super().__init__(parent)
+        self.parent = parent
+        self.title(title)
+        self.update_idletasks()
+        self.placeWindow(parent)
+        
+
+    def placeWindow(self, parent):
+        window_width, window_height = 300, 300
+        main_window_x = root.winfo_rootx()
+        main_window_y = root.winfo_rooty()
+        main_window_width = root.winfo_width()
+        main_window_height = root.winfo_height()
+
+        position_x = main_window_x + (main_window_width // 2) - (window_width // 2)
+        position_y = main_window_y + (main_window_height // 2) - (window_height // 2)
+
+        self.geometry(f"{window_width}x{window_height}+{position_x}+{position_y}")
+        self.transient(parent)
+        self.grab_set()
+        self.focus_set()
+        self.addWidgets()
+        self.wait_window(self)
+
+    def addWidgets(self):
+        self.nameEntry = ttk.Entry(self, font=('Segoe UI', 16))
+        self.nameEntry.insert(0, self.title)
+        self.nameEntry.select_range(0, 'end')
+        self.nameEntry.focus()
+        self.nameEntry.place(x=20, y=50, width=260, height=40)
+        # Create the save button
+        self.saveButton = ttk.Button(self, text='Save', style='Accent.TButton')
+        self.saveButton.place(relx=0.88, rely=0.8, anchor='e', width=100, height=40)
+        # Create the cancel button
+        self.cancelButton = ttk.Button(self, text='Cancel', style='TButton', command=self.destroy)
+        self.cancelButton.place(relx=0.12, rely=0.8, anchor='w', width=100, height=40)
+
+class addNewDish(tk.Toplevel):
+    def __init__(self, parent, title):
+        super().__init__(parent)
+        self.iconbitmap('/DishPlanner/icons/icon.ico')
+        self.parent = parent
+        self.title(title)
+        self.geometry("400x600")  # Set window size
+        self.resizable(False, False)
+        self.update_idletasks()  # Ensure the window size is calculated
+
+        # Center the window on the screen
+        position_x = self.parent.winfo_rootx() + (self.parent.winfo_width() // 2) - (400 // 2)
+        position_y = self.parent.winfo_rooty() + (self.parent.winfo_height() // 2) - (600 // 2)
+        self.geometry(f"+{position_x}+{position_y}")
+
+        self.addWidgets()
+
+    def addWidgets(self):
+        # Add title label
+        self.titleLabel = ttk.Label(self, text="Add New Dish", font=('Segoe UI', 24, 'bold'))
+        self.titleLabel.place(x=20, y=20, anchor='w')
+
+        # Add cancel button
+        self.closeButton = ttk.Button(self, text='Cancel \uE700', command=self.destroy, style='TButton')
+        self.closeButton.place(relx=0.5, rely=0.5, anchor='center')
+            
 
 # Utility functions
         
